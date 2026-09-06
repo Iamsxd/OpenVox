@@ -2,7 +2,7 @@ name: Deploy OpenVox to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [deploy/github-pages-zh]
   workflow_dispatch:
 
 permissions:

@@ -6,13 +6,13 @@
   "description": "Privacy-first open-source browser studio for professional voice training, audio analysis, instrument tuning, transcription, notation and choir rehearsal.",
   "author": "AuthorChe (Vadym Yemelianov)",
   "license": "AGPL-3.0-only",
-  "homepage": "https://vadymyem.github.io/OpenVox/",
+  "homepage": "https://iamsxd.github.io/OpenVox/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vadymyem/OpenVox.git"
+    "url": "https://github.com/Iamsxd/OpenVox.git"
   },
   "bugs": {
-    "url": "https://github.com/vadymyem/OpenVox/issues"
+    "url": "https://github.com/Iamsxd/OpenVox/issues"
   },
   "scripts": {
     "dev": "vite",

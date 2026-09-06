@@ -40,11 +40,11 @@ The suite includes:
 
 ```bash
 OPENVOX_BASE=/OpenVox/ \
-OPENVOX_PUBLIC_URL=https://vadymyem.github.io/OpenVox \
+OPENVOX_PUBLIC_URL=https://iamsxd.github.io/OpenVox \
 npm run build
 
 OPENVOX_BASE=/OpenVox/ \
-OPENVOX_PUBLIC_URL=https://vadymyem.github.io/OpenVox \
+OPENVOX_PUBLIC_URL=https://iamsxd.github.io/OpenVox \
 npm run verify
 ```
 

@@ -1,15 +1,24 @@
-export type Language = 'en' | 'uk' | 'de' | 'zh';
-export type ThemeMode = 'system' | 'dark' | 'light';
-export type ScoreClef = 'auto' | 'treble' | 'bass';
-export type ScoreArticulation = 'staccato' | 'tenuto' | 'accent' | 'marcato';
-export type ScoreDynamic = 'pp' | 'p' | 'mp' | 'mf' | 'f' | 'ff';
+export type Language = "en" | "uk" | "de" | "zh";
+export type ThemeMode = "system" | "dark" | "light";
+export type ScoreClef = "auto" | "treble" | "bass";
+export type ScoreArticulation = "staccato" | "tenuto" | "accent" | "marcato";
+export type ScoreDynamic = "pp" | "p" | "mp" | "mf" | "f" | "ff";
 export type ScoreVoice = 1 | 2 | 3 | 4;
-export type ProcessingMode = 'raw' | 'vocal' | 'noisy' | 'custom';
+export type ProcessingMode = "raw" | "vocal" | "noisy" | "custom";
 export type DurationValue = 4 | 2 | 1 | 0.5 | 0.25 | 0.125;
-export type QuantizeMode = 'free' | 4 | 8 | '8t' | 16;
+export type QuantizeMode = "free" | 4 | 8 | "8t" | 16;
 export type TrainingCategory =
-  'warmup' | 'pitch' | 'agility' | 'breath' | 'resonance' | 'articulation' | 'ear' | 'rhythm' | 'dynamics' | 'cooldown';
-export type TrainingDifficulty = 'beginner' | 'intermediate' | 'advanced';
+  | "warmup"
+  | "pitch"
+  | "agility"
+  | "breath"
+  | "resonance"
+  | "articulation"
+  | "ear"
+  | "rhythm"
+  | "dynamics"
+  | "cooldown";
+export type TrainingDifficulty = "beginner" | "intermediate" | "advanced";
 
 export interface PitchFrame {
   timestamp: number;
@@ -93,24 +102,15 @@ export interface TrainingSessionEntry {
   score?: number;
   targetNote?: string;
   notes?: string;
-  updatedAt?: number;
 }
 
 export interface PracticeGoal {
   id: string;
   title: string;
-  category: TrainingCategory | 'general';
+  category: TrainingCategory | "general";
   targetMinutesPerWeek: number;
   createdAt: number;
   active: boolean;
-  updatedAt?: number;
-}
-
-export interface SyncDeletion {
-  key: string;
-  entityType: 'trainingSession' | 'practiceGoal';
-  entityId: string;
-  deletedAt: number;
 }
 
 export interface InstrumentString {
@@ -149,7 +149,7 @@ export interface AudioPreferences {
   echoCancellation: boolean;
   noiseSuppression: boolean;
   autoGainControl: boolean;
-  latencyHint: 'interactive' | 'balanced' | 'playback';
+  latencyHint: "interactive" | "balanced" | "playback";
   minimumPitchHz: number;
   maximumPitchHz: number;
   confidenceThreshold: number;

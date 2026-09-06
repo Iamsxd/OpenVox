@@ -1,4 +1,4 @@
-# GitHub setup for `vadymyem/OpenVox`
+# GitHub setup for `Iamsxd/OpenVox`
 
 This repository is ready to publish as a GitHub Pages project site.
 
@@ -13,7 +13,7 @@ OpenVox
 Expected repository URL:
 
 ```text
-https://github.com/vadymyem/OpenVox
+https://github.com/Iamsxd/OpenVox
 ```
 
 ## 2. Push the source
@@ -22,11 +22,11 @@ From the extracted project directory:
 
 ```bash
 git init
-git branch -M main
+git switch -c deploy/github-pages-zh
 git add .
-git commit -m "Publish OpenVox 0.9.1 beta 1"
-git remote add origin https://github.com/vadymyem/OpenVox.git
-git push -u origin main
+git commit -m "Publish static Chinese GitHub Pages edition"
+git remote add origin https://github.com/Iamsxd/OpenVox.git
+git push -u origin deploy/github-pages-zh
 ```
 
 The repository root must contain `package.json`, `vite.config.ts`, `src/`, `public/` and `.github/`.
@@ -43,7 +43,7 @@ Repository -> Settings -> Pages
 
 Choose **GitHub Actions** as the deployment source if it is not already selected.
 
-The workflow in `.github/workflows/pages.yml` then:
+The workflow in `.github/workflows/static.yml` then:
 
 1. installs dependencies with `npm ci`;
 2. resolves the Pages base from the real repository name;
@@ -53,10 +53,10 @@ The workflow in `.github/workflows/pages.yml` then:
 6. uploads the `dist` directory as a Pages artifact;
 7. deploys it.
 
-For `vadymyem/OpenVox`, the resulting public URL is expected to be:
+For `Iamsxd/OpenVox`, the resulting public URL is expected to be:
 
 ```text
-https://vadymyem.github.io/OpenVox/
+https://iamsxd.github.io/OpenVox/
 ```
 
 ## 4. Verify the first deployment

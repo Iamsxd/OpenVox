@@ -8,7 +8,7 @@ Security fixes are applied to the current `main` branch and the newest published
 
 Please do not disclose an unpatched security vulnerability in a public issue.
 
-Use GitHub private vulnerability reporting or a private repository security advisory for `vadymyem/OpenVox` when available. Include:
+Use GitHub private vulnerability reporting or a private repository security advisory for `Iamsxd/OpenVox` when available. Include:
 
 - affected version or commit;
 - browser and operating system;

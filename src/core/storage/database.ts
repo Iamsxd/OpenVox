@@ -3,34 +3,23 @@ import type {
   OpenVoxProject,
   PracticeGoal,
   RecordingEntry,
-  SyncDeletion,
   TrainingSessionEntry,
 } from "../../types";
 import { synchronizeNotePitch } from "../music/notes";
 
 const DB_NAME = "openvox-studio";
-const DB_VERSION = 4;
+const DB_VERSION = 5;
 const PROJECTS = "projects";
 const RECORDINGS = "recordings";
 const SETTINGS = "settings";
 const SESSIONS = "trainingSessions";
 const GOALS = "practiceGoals";
-const SYNC_DELETIONS = "syncDeletions";
-const SYNC_METADATA = "syncMetadata";
 
 export const TRAINING_CHANGED_EVENT = "openvox-training-changed";
-export const TRAINING_SYNCED_EVENT = "openvox-training-synced";
 
-function notifyTrainingChanged(eventName = TRAINING_CHANGED_EVENT) {
-  if (typeof window !== "undefined") window.dispatchEvent(new Event(eventName));
-}
-
-function sessionUpdatedAt(session: TrainingSessionEntry) {
-  return session.updatedAt || session.completedAt || session.startedAt;
-}
-
-function goalUpdatedAt(goal: PracticeGoal) {
-  return goal.updatedAt || goal.createdAt;
+function notifyTrainingChanged() {
+  if (typeof window !== "undefined")
+    window.dispatchEvent(new Event(TRAINING_CHANGED_EVENT));
 }
 
 function normalizeProjectPitchData(project: OpenVoxProject): OpenVoxProject {
@@ -64,12 +53,10 @@ function openDatabase(): Promise<IDBDatabase> {
       }
       if (!db.objectStoreNames.contains(GOALS))
         db.createObjectStore(GOALS, { keyPath: "id" });
-      if (!db.objectStoreNames.contains(SYNC_DELETIONS)) {
-        db.createObjectStore(SYNC_DELETIONS, { keyPath: "key" });
-      }
-      if (!db.objectStoreNames.contains(SYNC_METADATA)) {
-        db.createObjectStore(SYNC_METADATA, { keyPath: "key" });
-      }
+      if (db.objectStoreNames.contains("syncDeletions"))
+        db.deleteObjectStore("syncDeletions");
+      if (db.objectStoreNames.contains("syncMetadata"))
+        db.deleteObjectStore("syncMetadata");
     };
     request.onsuccess = () => resolve(request.result);
     request.onerror = () =>
@@ -129,10 +116,7 @@ export async function listProjects(): Promise<OpenVoxProject[]> {
 
 export async function deleteProject(id: string): Promise<void> {
   const db = await openDatabase();
-  const tx = db.transaction(
-    [PROJECTS, RECORDINGS, SESSIONS, SYNC_DELETIONS],
-    "readwrite",
-  );
+  const tx = db.transaction([PROJECTS, RECORDINGS, SESSIONS], "readwrite");
   tx.objectStore(PROJECTS).delete(id);
   const recordings = tx.objectStore(RECORDINGS).index("projectId");
   const recordingKeys = await requestToPromise<IDBValidKey[]>(
@@ -140,22 +124,13 @@ export async function deleteProject(id: string): Promise<void> {
   );
   recordingKeys.forEach((key) => tx.objectStore(RECORDINGS).delete(key));
   const sessions = tx.objectStore(SESSIONS).index("projectId");
-  const projectSessions = await requestToPromise<TrainingSessionEntry[]>(
-    sessions.getAll(id),
+  const sessionKeys = await requestToPromise<IDBValidKey[]>(
+    sessions.getAllKeys(id),
   );
-  const deletedAt = Date.now();
-  projectSessions.forEach((session) => {
-    tx.objectStore(SESSIONS).delete(session.id);
-    tx.objectStore(SYNC_DELETIONS).put({
-      key: `trainingSession:${session.id}`,
-      entityType: "trainingSession",
-      entityId: session.id,
-      deletedAt,
-    } satisfies SyncDeletion);
-  });
+  sessionKeys.forEach((key) => tx.objectStore(SESSIONS).delete(key));
   await transactionDone(tx);
   db.close();
-  if (projectSessions.length) notifyTrainingChanged();
+  if (sessionKeys.length) notifyTrainingChanged();
 }
 
 export async function saveRecording(recording: RecordingEntry): Promise<void> {
@@ -189,10 +164,7 @@ export async function saveTrainingSession(
 ): Promise<void> {
   const db = await openDatabase();
   const tx = db.transaction(SESSIONS, "readwrite");
-  tx.objectStore(SESSIONS).put({
-    ...session,
-    updatedAt: sessionUpdatedAt(session),
-  });
+  tx.objectStore(SESSIONS).put(session);
   await transactionDone(tx);
   db.close();
   notifyTrainingChanged();
@@ -213,14 +185,8 @@ export async function listTrainingSessions(
 }
 export async function deleteTrainingSession(id: string): Promise<void> {
   const db = await openDatabase();
-  const tx = db.transaction([SESSIONS, SYNC_DELETIONS], "readwrite");
+  const tx = db.transaction(SESSIONS, "readwrite");
   tx.objectStore(SESSIONS).delete(id);
-  tx.objectStore(SYNC_DELETIONS).put({
-    key: `trainingSession:${id}`,
-    entityType: "trainingSession",
-    entityId: id,
-    deletedAt: Date.now(),
-  } satisfies SyncDeletion);
   await transactionDone(tx);
   db.close();
   notifyTrainingChanged();
@@ -229,7 +195,7 @@ export async function deleteTrainingSession(id: string): Promise<void> {
 export async function savePracticeGoal(goal: PracticeGoal): Promise<void> {
   const db = await openDatabase();
   const tx = db.transaction(GOALS, "readwrite");
-  tx.objectStore(GOALS).put({ ...goal, updatedAt: Date.now() });
+  tx.objectStore(GOALS).put(goal);
   await transactionDone(tx);
   db.close();
   notifyTrainingChanged();
@@ -245,99 +211,11 @@ export async function listPracticeGoals(): Promise<PracticeGoal[]> {
 }
 export async function deletePracticeGoal(id: string): Promise<void> {
   const db = await openDatabase();
-  const tx = db.transaction([GOALS, SYNC_DELETIONS], "readwrite");
+  const tx = db.transaction(GOALS, "readwrite");
   tx.objectStore(GOALS).delete(id);
-  tx.objectStore(SYNC_DELETIONS).put({
-    key: `practiceGoal:${id}`,
-    entityType: "practiceGoal",
-    entityId: id,
-    deletedAt: Date.now(),
-  } satisfies SyncDeletion);
   await transactionDone(tx);
   db.close();
   notifyTrainingChanged();
-}
-
-export async function listSyncDeletions(): Promise<SyncDeletion[]> {
-  const db = await openDatabase();
-  const tx = db.transaction(SYNC_DELETIONS, "readonly");
-  const result = await requestToPromise<SyncDeletion[]>(
-    tx.objectStore(SYNC_DELETIONS).getAll(),
-  );
-  db.close();
-  return result;
-}
-
-export async function claimTrainingSyncOwner(userId: string): Promise<boolean> {
-  const db = await openDatabase();
-  const tx = db.transaction(SYNC_METADATA, "readwrite");
-  const store = tx.objectStore(SYNC_METADATA);
-  const current = await requestToPromise<
-    { key: string; value: string } | undefined
-  >(store.get("trainingOwner"));
-  if (!current) store.put({ key: "trainingOwner", value: userId });
-  await transactionDone(tx);
-  db.close();
-  return !current || current.value === userId;
-}
-
-export async function applyTrainingSyncSnapshot(
-  sessions: TrainingSessionEntry[],
-  goals: PracticeGoal[],
-  deletions: Omit<SyncDeletion, "key">[],
-  acknowledgedDeletions: SyncDeletion[],
-): Promise<void> {
-  const db = await openDatabase();
-  const tx = db.transaction([SESSIONS, GOALS, SYNC_DELETIONS], "readwrite");
-  const sessionStore = tx.objectStore(SESSIONS);
-  const goalStore = tx.objectStore(GOALS);
-  const deletionStore = tx.objectStore(SYNC_DELETIONS);
-  const sessionRequest = sessionStore.getAll();
-  const goalRequest = goalStore.getAll();
-  const deletionRequest = deletionStore.getAll();
-  const [localSessions, localGoals, pendingDeletions] = await Promise.all([
-    requestToPromise<TrainingSessionEntry[]>(sessionRequest),
-    requestToPromise<PracticeGoal[]>(goalRequest),
-    requestToPromise<SyncDeletion[]>(deletionRequest),
-  ]);
-  const sessionMap = new Map(
-    localSessions.map((session) => [session.id, session]),
-  );
-  const goalMap = new Map(localGoals.map((goal) => [goal.id, goal]));
-
-  sessions.forEach((session) => {
-    const local = sessionMap.get(session.id);
-    if (!local || sessionUpdatedAt(session) >= sessionUpdatedAt(local))
-      sessionStore.put(session);
-  });
-  goals.forEach((goal) => {
-    const local = goalMap.get(goal.id);
-    if (!local || goalUpdatedAt(goal) >= goalUpdatedAt(local))
-      goalStore.put(goal);
-  });
-  deletions.forEach((deletion) => {
-    if (deletion.entityType === "trainingSession") {
-      const local = sessionMap.get(deletion.entityId);
-      if (!local || deletion.deletedAt >= sessionUpdatedAt(local))
-        sessionStore.delete(deletion.entityId);
-    } else {
-      const local = goalMap.get(deletion.entityId);
-      if (!local || deletion.deletedAt >= goalUpdatedAt(local))
-        goalStore.delete(deletion.entityId);
-    }
-  });
-
-  const acknowledgedMap = new Map(
-    acknowledgedDeletions.map((item) => [item.key, item.deletedAt]),
-  );
-  pendingDeletions.forEach((item) => {
-    const acknowledgedAt = acknowledgedMap.get(item.key);
-    if (acknowledgedAt !== undefined && item.deletedAt <= acknowledgedAt)
-      deletionStore.delete(item.key);
-  });
-  await transactionDone(tx);
-  db.close();
-  notifyTrainingChanged(TRAINING_SYNCED_EVENT);
 }
 
 export async function saveSettings(settings: AppSettings): Promise<void> {

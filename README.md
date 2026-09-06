@@ -8,9 +8,9 @@ Core microphone and project workflows run in the browser. No account or applicat
 
 ## Live application
 
-After the `main` branch is deployed with the included GitHub Pages workflow:
+After the `deploy/github-pages-zh` branch is deployed with the included GitHub Pages workflow:
 
-**https://vadymyem.github.io/OpenVox/**
+**https://iamsxd.github.io/OpenVox/**
 
 ## What is included
 
@@ -83,7 +83,7 @@ src/core/instruments/ instrument tuning definitions and frequency helpers
 src/core/music/       notation, score rendering, MusicXML/MIDI and playback
 src/core/storage/     IndexedDB persistence and portable project archives
 src/core/training/    vocal curriculum, exercises and training planning
-src/i18n/             complete EN/UK/DE interface and curriculum copy
+src/i18n/             complete EN/UK/DE/ZH interface and curriculum copy
 src/pages/            product modules
 src/styles/           responsive Material-inspired visual system
 tests/                application, storage, music, DSP-adjacent and accessibility tests
@@ -103,11 +103,6 @@ npm ci
 npm run dev
 ```
 
-For a production-like local container deployment, see the
-[Docker deployment guide (简体中文)](docs/DOCKER_DEPLOYMENT.zh-CN.md).
-
-The Docker Compose deployment includes an optional account API and PostgreSQL database. Guest mode remains local-only. Signed-in users synchronize training-session summaries and practice goals; recordings, imported audio, microphone frames, scores and projects stay in the browser.
-
 Production-quality local checks:
 
 ```bash
@@ -115,8 +110,8 @@ npm run lint
 npm run format:check
 npm run typecheck
 npm test
-OPENVOX_BASE=/OpenVox/ OPENVOX_PUBLIC_URL=https://vadymyem.github.io/OpenVox npm run build
-OPENVOX_BASE=/OpenVox/ OPENVOX_PUBLIC_URL=https://vadymyem.github.io/OpenVox npm run verify
+OPENVOX_BASE=/OpenVox/ OPENVOX_PUBLIC_URL=https://iamsxd.github.io/OpenVox npm run build
+OPENVOX_BASE=/OpenVox/ OPENVOX_PUBLIC_URL=https://iamsxd.github.io/OpenVox npm run verify
 ```
 
 `npm test` includes WebAssembly reference-frequency tests, core music tests, application route tests, IndexedDB tests, MusicXML tests, localization integrity, instrument tuning tests, WAV export tests, privacy defaults, theme contrast and automated accessibility checks across every public route.
@@ -125,9 +120,9 @@ OPENVOX_BASE=/OpenVox/ OPENVOX_PUBLIC_URL=https://vadymyem.github.io/OpenVox npm
 
 The repository is designed for the GitHub repository name **`OpenVox`**.
 
-1. Create `vadymyem/OpenVox`.
+1. Create `Iamsxd/OpenVox`.
 2. Upload or push the repository contents so `package.json` is at the repository root.
-3. Push to `main`.
+3. Push to `deploy/github-pages-zh`.
 4. In **Settings -> Pages**, select **GitHub Actions** as the source if GitHub has not already enabled it.
 5. The included workflow calculates the Pages base path from the actual repository name, builds the app, verifies the output and deploys the `dist` artifact.
 
@@ -184,7 +179,7 @@ These boundaries are documented rather than hidden.
 
 ## Privacy
 
-The core application does not require an account, database server or audio-upload endpoint. Projects and recordings remain in the browser until the user explicitly exports a file. Self-hosted Docker users may optionally sign in to synchronize practice summaries and goals through the included API.
+The application has no account, database server or audio-upload endpoint. Projects, recordings, practice history and goals remain in the current browser until the user explicitly exports a file.
 
 The standard web build does not load Google Analytics or another tracking service. Audio frames, recordings and score content stay within the local browser workflow unless the user explicitly exports a file or enables a browser-vendor feature described below.
 

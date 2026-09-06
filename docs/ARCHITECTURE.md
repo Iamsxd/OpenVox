@@ -40,12 +40,6 @@ React interface and routing
                 +-- training sessions
                 +-- practice goals
 
-Optional account path
-        |
-        +-- same-origin Fastify API
-                +-- scrypt password verification
-                +-- HttpOnly session cookies
-                +-- PostgreSQL training summaries/goals
 ```
 
 ## Real-time audio path
@@ -94,7 +88,7 @@ The DSP table helper generates and caches window/twiddle data lazily instead of 
 
 IndexedDB is the durable local store. Schema upgrades are versioned. Export/import functions provide portability because browser site data is not a permanent backup mechanism.
 
-When a user signs in, the client merges training sessions and practice goals with the account copy in PostgreSQL. Local deletion markers make deletes propagate between devices. A browser training library is bound to the first account that synchronizes it, preventing records from one account being uploaded to another account on a shared browser profile.
+Training sessions and practice goals remain in IndexedDB for the current browser origin. There is no account or synchronization path in this edition.
 
 ## Music data
 
@@ -115,8 +109,8 @@ A `404.html` copy is also emitted as a recovery path.
 Vite receives `OPENVOX_BASE` at build time. The Pages workflow derives it from `GITHUB_REPOSITORY`, so:
 
 ```text
-vadymyem/OpenVox -> /OpenVox/
-vadymyem/vadymyem.github.io -> /
+Iamsxd/OpenVox -> /OpenVox/
+Iamsxd/Iamsxd.github.io -> /
 ```
 
 The same base is applied to bundled assets, PWA start/scope paths, WASM, AudioWorklet and Professional Audio Lab resources.
@@ -128,10 +122,7 @@ Core audio processing has no OpenVox API dependency.
 The expected optional network activity is:
 
 - GitHub Pages static asset delivery;
-- the optional same-origin account API after registration or sign-in;
 - browser-vendor speech recognition when the user explicitly enables voice commands and the browser implementation uses a remote service;
 - external source links opened by the user.
 
-The standard web build does not include Google Analytics or another tracking integration.
-
-The Docker deployment exposes only Nginx. Nginx proxies `/api/` to the internal Fastify service; PostgreSQL is not published to the host. Raw audio and project data are outside the current API contract.
+The standard web build does not include Google Analytics, another tracking integration or an application API.

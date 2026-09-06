@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OPENVOX_BASE: /OpenVox/
-      OPENVOX_PUBLIC_URL: https://vadymyem.github.io/OpenVox
+      OPENVOX_PUBLIC_URL: https://iamsxd.github.io/OpenVox
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6

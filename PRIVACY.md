@@ -19,11 +19,9 @@ OpenVox may store the following in the browser's IndexedDB or local settings sto
 
 The user can export project or audio files to the device. Clearing site data in the browser can remove locally stored information that has not been exported.
 
-## Optional accounts and practice synchronization
+## No accounts or synchronization
 
-Guest mode remains local and does not require an account. After a user explicitly creates an account or signs in, OpenVox synchronizes training-session summaries and practice goals with the self-hosted OpenVox API. Synced summaries can include exercise details, timestamps, duration, accuracy metrics, target notes and user-entered session notes.
-
-Raw microphone frames, recording blobs, imported audio, score documents and projects are not uploaded by this synchronization feature. Passwords are stored as salted scrypt hashes and browser sessions use an HttpOnly, SameSite=Lax cookie. Non-localhost deployments must use HTTPS and secure cookies.
+This edition has no account service or cloud synchronization. Training-session summaries and practice goals remain in the current browser's IndexedDB storage. Clearing site data can remove them.
 
 ## Imported files
 

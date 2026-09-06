@@ -5,24 +5,24 @@
 The default public repository is expected to be:
 
 ```text
-https://github.com/vadymyem/OpenVox
+https://github.com/Iamsxd/OpenVox
 ```
 
 The corresponding project Pages URL is expected to be:
 
 ```text
-https://vadymyem.github.io/OpenVox/
+https://iamsxd.github.io/OpenVox/
 ```
 
 ## Automatic deployment
 
-`.github/workflows/pages.yml` deploys every successful push to `main`.
+`.github/workflows/static.yml` deploys every successful push to `deploy/github-pages-zh`.
 
 The workflow derives the base path from `GITHUB_REPOSITORY`:
 
 ```text
 repository OpenVox -> OPENVOX_BASE=/OpenVox/
-repository vadymyem.github.io -> OPENVOX_BASE=/
+repository Iamsxd.github.io -> OPENVOX_BASE=/
 ```
 
 It also derives the public URL used by the static SEO postbuild step.
@@ -32,11 +32,11 @@ It also derives the public URL used by the static SEO postbuild step.
 ```bash
 npm ci
 OPENVOX_BASE=/OpenVox/ \
-OPENVOX_PUBLIC_URL=https://vadymyem.github.io/OpenVox \
+OPENVOX_PUBLIC_URL=https://iamsxd.github.io/OpenVox \
 npm run build
 
 OPENVOX_BASE=/OpenVox/ \
-OPENVOX_PUBLIC_URL=https://vadymyem.github.io/OpenVox \
+OPENVOX_PUBLIC_URL=https://iamsxd.github.io/OpenVox \
 npm run verify
 ```
 
