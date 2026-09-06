@@ -20,7 +20,7 @@ function RecordingCard({ recording, onDelete }: { recording: RecordingEntry; onD
       <div className="recording-main">
         <strong>{recording.name}</strong>
         <span>
-          {new Date(recording.createdAt).toLocaleString()} · {recording.duration.toFixed(1)}s
+          {new Date(recording.createdAt).toLocaleString()} · {recording.duration.toFixed(1)} {t('common.secondsShort')}
         </span>
       </div>
       <audio controls preload="metadata" src={source} />
@@ -172,7 +172,8 @@ export function StudioPage() {
       return;
     }
     try {
-      const locale = language === 'uk' ? 'uk-UA' : language === 'de' ? 'de-DE' : 'en-US';
+      const locale =
+        language === 'uk' ? 'uk-UA' : language === 'de' ? 'de-DE' : language === 'zh' ? 'zh-CN' : 'en-US';
       speech.current.startCommands(
         locale,
         {
@@ -198,7 +199,7 @@ export function StudioPage() {
       <Seo title={t('studio.title')} description={t('studio.subtitle')} path="/studio" />
       <div className="page-header">
         <div className="page-title-wrap">
-          <div className="eyebrow">OpenVox Core</div>
+          <div className="eyebrow">{t('studio.eyebrow')}</div>
           <h1>{t('studio.title')}</h1>
           <p>{t('studio.subtitle')}</p>
         </div>
@@ -208,7 +209,7 @@ export function StudioPage() {
           <div className="card-title">
             <h2>{t('studio.mic')}</h2>
             <span className={`badge ${audio.state.active ? '' : 'off'}`}>
-              {audio.state.active ? t('common.ready') : 'Offline'}
+              {audio.state.active ? t('common.ready') : t('common.offline')}
             </span>
           </div>
           <div className="field">
@@ -244,9 +245,9 @@ export function StudioPage() {
             </div>
           </div>
           <div className="field">
-            <label>Noise gate · {settings.gateMultiplier.toFixed(1)}×</label>
+            <label>{t('settings.gate')} · {settings.gateMultiplier.toFixed(1)}×</label>
             <input
-              aria-label={`Noise gate ${settings.gateMultiplier.toFixed(1)}×`}
+              aria-label={`${t('settings.gate')} ${settings.gateMultiplier.toFixed(1)}×`}
               type="range"
               min="1"
               max="4"
@@ -370,7 +371,7 @@ export function StudioPage() {
           <div className="card history-card">
             <div className="card-title">
               <h2>{t('studio.history')}</h2>
-              <span className="badge">{frames.length} frames</span>
+              <span className="badge">{frames.length} {t('common.frames')}</span>
             </div>
             <PitchHistory frames={frames} />
           </div>

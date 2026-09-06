@@ -213,7 +213,7 @@ Blind multi-singer source separation from a single live microphone is not claime
 
 ## Interface and accessibility
 
-- English, Ukrainian and German;
+- English, Ukrainian, German and Simplified Chinese;
 - dark, light and system themes;
 - reduced-motion preference;
 - high-contrast preference;

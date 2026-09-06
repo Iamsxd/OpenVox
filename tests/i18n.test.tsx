@@ -6,10 +6,11 @@ function sortedKeys(language: keyof typeof translations) {
 }
 
 describe('internationalization', () => {
-  it('keeps English, Ukrainian and German translation keys in sync', () => {
+  it('keeps English, Ukrainian, German and Chinese translation keys in sync', () => {
     const english = sortedKeys('en');
     expect(sortedKeys('uk')).toEqual(english);
     expect(sortedKeys('de')).toEqual(english);
+    expect(sortedKeys('zh')).toEqual(english);
   });
 
   it('contains no blank interface translations', () => {
@@ -24,7 +25,7 @@ describe('internationalization', () => {
 import { PRO_TRANSLATION_KEYS, proText } from '../src/i18n/proTranslations';
 
 it('keeps professional feature translations complete in all supported languages', () => {
-  for (const language of ['en', 'uk', 'de'] as const) {
+  for (const language of ['en', 'uk', 'de', 'zh'] as const) {
     for (const key of PRO_TRANSLATION_KEYS) {
       expect(proText(language, key)).not.toBe(key);
       expect(proText(language, key).trim().length).toBeGreaterThan(0);

@@ -297,7 +297,7 @@ export function PracticePage() {
       <Seo title={t('practice.title')} description={t('practice.subtitle')} path="/practice" />
       <div className="page-header">
         <div className="page-title-wrap">
-          <div className="eyebrow">OpenVox Exercises</div>
+          <div className="eyebrow">{t('practice.eyebrow')}</div>
           <h1>{t('practice.title')}</h1>
           <p>{t('practice.subtitle')}</p>
         </div>

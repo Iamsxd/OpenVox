@@ -5,7 +5,6 @@ import { AcademyPage } from '../pages/AcademyPage';
 import { AudioLabPage } from '../pages/AudioLabPage';
 import { InstrumentsPage } from '../pages/InstrumentsPage';
 import { ProgressPage } from '../pages/ProgressPage';
-import { AboutPage } from '../pages/AboutPage';
 import { ChoirPage } from '../pages/ChoirPage';
 import { LandingPage } from '../pages/LandingPage';
 import { PracticePage } from '../pages/PracticePage';
@@ -17,6 +16,7 @@ import { StudioPage } from '../pages/StudioPage';
 import { TranscribePage } from '../pages/TranscribePage';
 import { TrackLabPage } from '../pages/TrackLabPage';
 import { MixerPage } from '../pages/MixerPage';
+import { AccountPage } from '../pages/AccountPage';
 
 export function App() {
   return (
@@ -37,8 +37,8 @@ export function App() {
         <Route path="/choir" element={<ChoirPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/account" element={<AccountPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
-        <Route path="/about" element={<AboutPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

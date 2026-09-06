@@ -1,8 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { AppSettings, OpenVoxProject, ScoreDocument } from '../types';
 import { listProjects, loadSettings, saveProject, saveSettings } from '../core/storage/database';
-import { setAnalyticsEnabled } from '../core/analytics';
-import { getInitialLanguagePreference, getInitialThemePreference, mirrorInterfacePreferences } from '../core/systemPreferences';
+import {
+  getInitialLanguagePreference,
+  getInitialThemePreference,
+  mirrorInterfacePreferences,
+} from '../core/systemPreferences';
 
 const defaultScore = (): ScoreDocument => {
   const now = Date.now();
@@ -15,7 +18,7 @@ const defaultScore = (): ScoreDocument => {
     keyFifths: 0,
     notes: [],
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
   };
 };
 
@@ -26,7 +29,6 @@ export const defaultSettings: AppSettings = {
   processingMode: 'vocal',
   gateMultiplier: 1.8,
   microphoneId: '',
-  analyticsEnabled: true,
   audio: {
     requestedSampleRate: 48000,
     channelCount: 1,
@@ -37,13 +39,13 @@ export const defaultSettings: AppSettings = {
     minimumPitchHz: 65,
     maximumPitchHz: 1400,
     confidenceThreshold: 0.6,
-    tunerToleranceCents: 5
+    tunerToleranceCents: 5,
   },
   accessibility: {
     reducedMotion: false,
     highContrast: false,
-    largeControls: false
-  }
+    largeControls: false,
+  },
 };
 
 interface AppContextValue {
@@ -66,7 +68,12 @@ function makeProject(name = 'My OpenVox Project'): OpenVoxProject {
     updatedAt: now,
     score: defaultScore(),
     pitchHistory: [],
-    settings: { processingMode: 'vocal', noiseFloor: 0.008, gateMultiplier: 1.8, referenceA4: 440 }
+    settings: {
+      processingMode: 'vocal',
+      noiseFloor: 0.008,
+      gateMultiplier: 1.8,
+      referenceA4: 440,
+    },
   };
 }
 
@@ -74,7 +81,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<AppSettings>(() => ({
     ...defaultSettings,
     language: getInitialLanguagePreference(),
-    theme: getInitialThemePreference()
+    theme: getInitialThemePreference(),
   }));
   const [project, setProject] = useState<OpenVoxProject>(() => makeProject());
   const [hydrated, setHydrated] = useState(false);
@@ -82,13 +89,24 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     void Promise.all([loadSettings(), listProjects()])
       .then(([savedSettings, projects]) => {
-        if (savedSettings)
+        if (savedSettings) {
+          const compatibleSettings = { ...savedSettings } as AppSettings & {
+            analyticsEnabled?: boolean;
+          };
+          delete compatibleSettings.analyticsEnabled;
           setSettings({
             ...defaultSettings,
-            ...savedSettings,
-            audio: { ...defaultSettings.audio, ...(savedSettings.audio || {}) },
-            accessibility: { ...defaultSettings.accessibility, ...(savedSettings.accessibility || {}) }
+            ...compatibleSettings,
+            audio: {
+              ...defaultSettings.audio,
+              ...(compatibleSettings.audio || {}),
+            },
+            accessibility: {
+              ...defaultSettings.accessibility,
+              ...(compatibleSettings.accessibility || {}),
+            },
           });
+        }
         if (projects[0]) setProject(projects[0]);
       })
       .catch(() => undefined)
@@ -97,10 +115,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (hydrated) void saveSettings(settings).catch(() => undefined);
   }, [settings, hydrated]);
-  useEffect(() => {
-    if (!hydrated) return;
-    void setAnalyticsEnabled(settings.analyticsEnabled);
-  }, [settings.analyticsEnabled, hydrated]);
   useEffect(() => {
     if (!hydrated) return;
     const timer = window.setTimeout(() => {
@@ -117,10 +131,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     root.lang = settings.language;
     mirrorInterfacePreferences(settings.language, settings.theme);
 
-    const media = typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-color-scheme: light)') : undefined;
+    const media =
+      typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-color-scheme: light)') : undefined;
     const syncThemeColor = () => {
       const light = settings.theme === 'light' || (settings.theme === 'system' && (media?.matches ?? false));
-      document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute('content', light ? '#f8f5ef' : '#030712');
+      document
+        .querySelector<HTMLMetaElement>('meta[name="theme-color"]')
+        ?.setAttribute('content', light ? '#f8f5ef' : '#030712');
     };
     syncThemeColor();
     if (settings.theme === 'system') media?.addEventListener?.('change', syncThemeColor);
@@ -142,9 +159,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         const next = { ...project, updatedAt: Date.now() };
         setProject(next);
         await saveProject(next);
-      }
+      },
     }),
-    [settings, project]
+    [settings, project],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

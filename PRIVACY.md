@@ -19,15 +19,21 @@ OpenVox may store the following in the browser's IndexedDB or local settings sto
 
 The user can export project or audio files to the device. Clearing site data in the browser can remove locally stored information that has not been exported.
 
+## Optional accounts and practice synchronization
+
+Guest mode remains local and does not require an account. After a user explicitly creates an account or signs in, OpenVox synchronizes training-session summaries and practice goals with the self-hosted OpenVox API. Synced summaries can include exercise details, timestamps, duration, accuracy metrics, target notes and user-entered session notes.
+
+Raw microphone frames, recording blobs, imported audio, score documents and projects are not uploaded by this synchronization feature. Passwords are stored as salted scrypt hashes and browser sessions use an HttpOnly, SameSite=Lax cookie. Non-localhost deployments must use HTTPS and secure cookies.
+
 ## Imported files
 
 Audio, MusicXML, MIDI and OpenVox project files are read locally by the application. They are not uploaded by the core import workflow.
 
-## Optional analytics
+## Analytics and tracking
 
-The standard web deployment loads Google Analytics with measurement ID `G-6LN7QL6SP2` for aggregate page-visit measurement. Users can disable analytics in application settings. Audio frames, score content and recording blobs are not intentionally attached to analytics events by OpenVox Studio. Deployment operators are responsible for applying any consent mechanism required by the laws and policies that apply to their audience.
+The standard web deployment does not load Google Analytics or another tracking service. Audio frames, score content, recording blobs and project data remain outside third-party analytics workflows.
 
-Users who require a deployment without analytics can disable the integration in settings or remove the analytics module/configuration in their own deployment.
+Deployment operators who add their own telemetry are responsible for documenting it, obtaining any required consent and keeping private audio or project content out of analytics events.
 
 ## Optional browser speech recognition
 

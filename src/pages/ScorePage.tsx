@@ -749,7 +749,7 @@ export function ScorePage() {
       <Seo title={t('score.title')} description={t('score.subtitle')} path="/score" />
       <div className="page-header score-page-header">
         <div className="page-title-wrap">
-          <div className="eyebrow">OpenVox Score</div>
+          <div className="eyebrow">{t('score.eyebrow')}</div>
           <h1>{t('score.title')}</h1>
           <p>{x('score.proSubtitle')}</p>
         </div>

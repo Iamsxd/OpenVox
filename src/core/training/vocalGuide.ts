@@ -1,4 +1,5 @@
 import type { Language } from '../../types';
+import { zhVocalGuide } from './zhVocalGuide';
 
 export type VocalGuideLesson = {
   id: string;
@@ -450,7 +451,7 @@ const de: VocalGuideLesson[] = [
   }
 ];
 
-const guides: Record<Language, VocalGuideLesson[]> = { en, uk, de };
+const guides: Record<Language, VocalGuideLesson[]> = { en, uk, de, zh: zhVocalGuide };
 
 export function getVocalGuide(language: Language) {
   return guides[language];

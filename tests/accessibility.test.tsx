@@ -5,14 +5,17 @@ import { MemoryRouter } from 'react-router-dom';
 import { AppProvider } from '../src/app/AppContext';
 import { I18nProvider } from '../src/i18n/I18nContext';
 import { App } from '../src/app/App';
+import { AuthProvider } from '../src/app/AuthContext';
 
 function renderRoute(route: string) {
   return render(
     <MemoryRouter initialEntries={[route]}>
       <AppProvider>
-        <I18nProvider language="en">
-          <App />
-        </I18nProvider>
+        <AuthProvider>
+          <I18nProvider language="en">
+            <App />
+          </I18nProvider>
+        </AuthProvider>
       </AppProvider>
     </MemoryRouter>
   );
@@ -36,6 +39,7 @@ for (const route of [
   '/choir',
   '/projects',
   '/settings',
+  '/account',
   '/privacy',
   '/about'
 ]) {

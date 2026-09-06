@@ -1,6 +1,8 @@
 import type { PitchFrame } from '../types';
+import { useI18n } from '../i18n/I18nContext';
 
 export function PitchOrb({ pitch, level, active }: { pitch: PitchFrame | null; level: number; active: boolean }) {
+  const { t } = useI18n();
   const cents = pitch?.cents || 0;
   const hueShift = Math.min(1, Math.abs(cents) / 50);
   const scale = 1 + Math.min(0.18, level * 1.8);
@@ -14,7 +16,11 @@ export function PitchOrb({ pitch, level, active }: { pitch: PitchFrame | null; l
       >
         <span className="pitch-note">{pitch ? `${pitch.note}${pitch.octave}` : '—'}</span>
         <span className="pitch-cents">
-          {pitch ? `${pitch.cents > 0 ? '+' : ''}${pitch.cents} cents` : active ? 'listening' : 'offline'}
+          {pitch
+            ? `${pitch.cents > 0 ? '+' : ''}${pitch.cents} ${t('studio.cents')}`
+            : active
+              ? t('common.listening')
+              : t('common.offline')}
         </span>
       </div>
     </div>

@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useApp } from '../app/AppContext';
 import { I18nProvider, useI18n } from '../i18n/I18nContext';
 import { Icon } from './Icon';
-import { SupportModal } from './SupportModal';
 import { MobileExperienceNotice } from './MobileExperienceNotice';
-import { SUPPORT_EVENT, shouldPromptForSupport } from '../core/support';
+import { useAuth } from '../app/AuthContext';
+import { accountText } from '../i18n/accountTranslations';
 
 const navItems = [
   ['/', 'home', 'nav.home'],
@@ -22,25 +22,17 @@ const navItems = [
   ['/choir', 'users', 'nav.choir'],
   ['/audio-lab', 'settings', 'nav.audioLab'],
   ['/projects', 'folder', 'nav.projects'],
-  ['/settings', 'settings', 'nav.settings']
+  ['/settings', 'settings', 'nav.settings'],
 ] as const;
 
 function ShellInner() {
   const { settings, setSettings } = useApp();
-  const { t } = useI18n();
+  const { t, language } = useI18n();
+  const { user, authStatus } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [supportOpen, setSupportOpen] = useState(false);
   const location = useLocation();
   const mainRef = useRef<HTMLElement>(null);
   const firstRoute = useRef(true);
-
-  useEffect(() => {
-    const onSupportOpportunity = () => {
-      if (shouldPromptForSupport()) setSupportOpen(true);
-    };
-    window.addEventListener(SUPPORT_EVENT, onSupportOpportunity);
-    return () => window.removeEventListener(SUPPORT_EVENT, onSupportOpportunity);
-  }, []);
 
   useEffect(() => {
     if (firstRoute.current) {
@@ -83,12 +75,21 @@ function ShellInner() {
           ))}
         </nav>
         <div className="top-actions">
+          <NavLink
+            to="/account"
+            className={({ isActive }) => `account-trigger ${isActive ? 'active' : ''}`}
+            aria-label={accountText(language, 'nav.account')}
+            title={user?.displayName || accountText(language, 'nav.account')}
+          >
+            <Icon name="users" />
+            <span className={`account-state-dot ${authStatus}`} />
+          </NavLink>
           <button
             className="icon-button theme-toggle"
             onClick={() =>
               setSettings((current) => ({
                 ...current,
-                theme: current.theme === 'dark' ? 'light' : current.theme === 'light' ? 'system' : 'dark'
+                theme: current.theme === 'dark' ? 'light' : current.theme === 'light' ? 'system' : 'dark',
               }))
             }
             aria-label={t('common.themeCycle')}
@@ -96,7 +97,7 @@ function ShellInner() {
             <Icon name={settings.theme === 'light' ? 'sun' : 'moon'} />
           </button>
           <div className="language-switch" aria-label={t('settings.language')}>
-            {(['en', 'uk', 'de'] as const).map((language) => (
+            {(['en', 'uk', 'de', 'zh'] as const).map((language) => (
               <button
                 key={language}
                 className={settings.language === language ? 'active' : ''}
@@ -119,25 +120,6 @@ function ShellInner() {
       <main id="main-content" ref={mainRef} className="main-content" tabIndex={-1}>
         <Outlet />
       </main>
-      <footer className="footer">
-        <span>© {new Date().getFullYear()} AuthorChe. OpenVox Studio.</span>
-        <a href="https://authorche.top" target="_blank" rel="noopener noreferrer">
-          authorche.top
-        </a>
-        <a href="https://github.com/vadymyem/OpenVox" target="_blank" rel="noopener noreferrer">
-          {t('common.source')}
-        </a>
-        <Link to="/about">{t('author.title')}</Link>
-        <a href="https://authorche.top/resume" target="_blank" rel="noopener noreferrer">
-          {t('author.resume')}
-        </a>
-        <Link to="/privacy">{t('common.privacy')}</Link>
-      </footer>
-      <button className="support-fab" onClick={() => setSupportOpen(true)} aria-label={t('common.support')}>
-        <Icon name="heart" />
-        <span>{t('common.support')}</span>
-      </button>
-      <SupportModal open={supportOpen} onClose={() => setSupportOpen(false)} />
     </div>
   );
 }

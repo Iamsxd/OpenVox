@@ -39,6 +39,13 @@ React interface and routing
                 +-- settings
                 +-- training sessions
                 +-- practice goals
+
+Optional account path
+        |
+        +-- same-origin Fastify API
+                +-- scrypt password verification
+                +-- HttpOnly session cookies
+                +-- PostgreSQL training summaries/goals
 ```
 
 ## Real-time audio path
@@ -87,6 +94,8 @@ The DSP table helper generates and caches window/twiddle data lazily instead of 
 
 IndexedDB is the durable local store. Schema upgrades are versioned. Export/import functions provide portability because browser site data is not a permanent backup mechanism.
 
+When a user signs in, the client merges training sessions and practice goals with the account copy in PostgreSQL. Local deletion markers make deletes propagate between devices. A browser training library is bound to the first account that synchronizes it, preventing records from one account being uploaded to another account on a shared browser profile.
+
 ## Music data
 
 The score model is an internal normalized event representation. Importers translate MusicXML/MIDI to that model; exporters generate open formats from it. The visual score renderer is an SVG renderer optimized for browser editing and preview rather than full publishing-grade engraving.
@@ -119,6 +128,10 @@ Core audio processing has no OpenVox API dependency.
 The expected optional network activity is:
 
 - GitHub Pages static asset delivery;
-- Google Analytics page telemetry in the standard web build, unless disabled by the user;
+- the optional same-origin account API after registration or sign-in;
 - browser-vendor speech recognition when the user explicitly enables voice commands and the browser implementation uses a remote service;
-- external support/source links opened by the user.
+- external source links opened by the user.
+
+The standard web build does not include Google Analytics or another tracking integration.
+
+The Docker deployment exposes only Nginx. Nginx proxies `/api/` to the internal Fastify service; PostgreSQL is not published to the host. Raw audio and project data are outside the current API contract.

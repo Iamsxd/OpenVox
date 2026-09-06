@@ -29,7 +29,7 @@ After the `main` branch is deployed with the included GitHub Pages workflow:
 | Choir Studio           | MusicXML/MIDI ensemble import, part isolation, rehearsal mix, passage selection, 50–150% tempo, repetitions, live part scoring                                                                    |
 | Progress               | local training history, weekly goals, session statistics and category balance                                                                                                                     |
 | Local Projects         | IndexedDB projects, recordings, settings, training sessions, goals and portable `.openvox` archives                                                                                               |
-| Interface              | English, Ukrainian and German; dark, light and system themes; responsive desktop/tablet/mobile layouts; accessibility preferences                                                                 |
+| Interface              | English, Ukrainian, German and Simplified Chinese; dark, light and system themes; responsive desktop/tablet/mobile layouts; accessibility preferences                                             |
 
 See [docs/CAPABILITIES.md](docs/CAPABILITIES.md) for the detailed functional inventory.
 
@@ -50,7 +50,7 @@ Microphone
 
 Local persistence uses IndexedDB. Audio-file decoding, WAV rendering, notation conversion and score export also run in the browser.
 
-Browser speech recognition and Google Analytics are explicitly separated from the core audio path. The standard web build loads the AuthorChe Google Analytics property for page-visit measurement and provides an analytics opt-out in Settings. See [PRIVACY.md](PRIVACY.md) and [docs/PRIVACY_MODEL.md](docs/PRIVACY_MODEL.md).
+Optional browser speech recognition is explicitly separated from the core audio path. The standard web build does not include Google Analytics or another tracking integration. See [PRIVACY.md](PRIVACY.md) and [docs/PRIVACY_MODEL.md](docs/PRIVACY_MODEL.md).
 
 ## Technology
 
@@ -102,6 +102,11 @@ Requirements:
 npm ci
 npm run dev
 ```
+
+For a production-like local container deployment, see the
+[Docker deployment guide (简体中文)](docs/DOCKER_DEPLOYMENT.zh-CN.md).
+
+The Docker Compose deployment includes an optional account API and PostgreSQL database. Guest mode remains local-only. Signed-in users synchronize training-session summaries and practice goals; recordings, imported audio, microphone frames, scores and projects stay in the browser.
 
 Production-quality local checks:
 
@@ -164,16 +169,6 @@ Microphone features require a secure context in normal browser deployments. GitH
 
 See [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) and [docs/MOBILE_EXPERIENCE.md](docs/MOBILE_EXPERIENCE.md).
 
-## Support the project
-
-OpenVox is free and open source. A floating Support button links to `https://authorche.top/donate`. The application can also show a non-blocking support prompt after the first and every fourth meaningful file export, following the same voluntary-support pattern used by AuthorChe's Resume Builder.
-
-Donations are optional and do not unlock features.
-
-## About the creator
-
-OpenVox is created by **AuthorChe (Vadym Yemelianov)** — a Ukrainian musician, vocalist, vocal teacher, web developer and open-source creator. The landing page and About page include a public author card with a link to the creator's résumé at `https://authorche.top/resume`.
-
 ## Important technical limits
 
 OpenVox Studio is ambitious, but it does not claim impossible browser-side behavior:
@@ -189,9 +184,9 @@ These boundaries are documented rather than hidden.
 
 ## Privacy
 
-The core application does not require an account, database server or audio-upload endpoint. Projects and recordings remain in the browser until the user explicitly exports a file.
+The core application does not require an account, database server or audio-upload endpoint. Projects and recordings remain in the browser until the user explicitly exports a file. Self-hosted Docker users may optionally sign in to synchronize practice summaries and goals through the included API.
 
-The standard web build loads Google Analytics page-visit measurement by default and provides an opt-out in application settings. Analytics remains separate from every audio-processing path; audio frames, recordings and score content are not intentionally attached to analytics events.
+The standard web build does not load Google Analytics or another tracking service. Audio frames, recordings and score content stay within the local browser workflow unless the user explicitly exports a file or enables a browser-vendor feature described below.
 
 ## Contributing
 

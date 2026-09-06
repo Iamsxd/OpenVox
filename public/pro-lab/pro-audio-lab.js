@@ -324,8 +324,168 @@
       sampleRateDetected: 'Abtastrate',
       channelsDetected: 'Kanäle',
       settings: 'Instrumenteinstellungen'
+    },
+    zh: {
+      title: '专业音频实验室',
+      subtitle: '高级本地音频工具',
+      input: '输入',
+      dsp: 'DSP',
+      instruments: '乐器工具',
+      visual: '可视化',
+      offline: '文件分析',
+      presets: '预设',
+      diagnostics: '诊断',
+      start: '启动麦克风',
+      stop: '停止麦克风',
+      record: '录制处理后音频',
+      stopRecord: '停止录音',
+      refresh: '刷新设备',
+      device: '输入设备',
+      constraints: '浏览器处理',
+      echo: '回声消除',
+      noise: '噪声抑制',
+      agc: '自动增益控制',
+      sampleRate: '请求采样率',
+      channels: '声道',
+      latency: '延迟模式',
+      signal: '信号链',
+      gain: '前级增益',
+      highpass: '高通滤波器',
+      lowpass: '低通滤波器',
+      notch: '陷波滤波器',
+      gate: '噪声门',
+      compressor: '压缩器',
+      equalizer: '音色均衡器',
+      reverb: '混响',
+      delay: '延迟',
+      limiter: '安全限制器',
+      postGain: '后级增益',
+      monitor: '输入监听',
+      spectrum: '频谱',
+      scope: '示波器',
+      spectrogram: '频谱图',
+      tuner: '精密调音器',
+      metronome: '节拍器',
+      tone: '音调发生器',
+      drone: '持续音 / 和弦',
+      keyboard: '参考键盘',
+      bpm: '速度',
+      beats: '每小节拍数',
+      subdivision: '节拍细分',
+      swing: '摇摆',
+      volume: '音量',
+      wave: '波形',
+      frequency: '频率',
+      cents: '微调',
+      root: 'MIDI 根音',
+      shape: '音程',
+      play: '播放',
+      pause: '停止',
+      analyze: '分析音频文件',
+      chooseFile: '选择音频文件',
+      savePreset: '保存当前预设',
+      exportPreset: '导出设置',
+      importPreset: '导入设置',
+      reset: '重置',
+      close: '关闭',
+      statusIdle: '空闲',
+      statusLive: '麦克风已启用',
+      unsupported: '不支持',
+      supported: '支持',
+      copy: '复制报告',
+      download: '下载',
+      peak: '峰值',
+      rms: 'RMS',
+      centroid: '频谱质心',
+      rolloff: '85% 频谱滚降',
+      flatness: '频谱平坦度',
+      dominants: '主导频率',
+      duration: '时长',
+      sampleRateDetected: '采样率',
+      channelsDetected: '声道',
+      settings: '乐器设置'
     }
   };
+  const ZH_INLINE = Object.freeze({
+    Pitch: '音高',
+    'Sample rate': '采样率',
+    'Default device': '默认设备',
+    Mono: '单声道',
+    Stereo: '立体声',
+    Interactive: '交互',
+    Balanced: '均衡',
+    Playback: '播放',
+    'Pre gain': '前级增益',
+    'Post gain': '后级增益',
+    'Monitor level': '监听电平',
+    Enabled: '启用',
+    Cutoff: '截止频率',
+    Frequency: '频率',
+    Threshold: '阈值',
+    Attack: '启动时间',
+    Release: '释放时间',
+    Hold: '保持时间',
+    'Closed level': '关闭电平',
+    Knee: '拐点',
+    Ratio: '压缩比',
+    'Low shelf frequency': '低频搁架频率',
+    'Low shelf gain': '低频搁架增益',
+    'Presence frequency': '临场感频率',
+    'Presence Q': '临场感 Q 值',
+    'Presence gain': '临场感增益',
+    'Air frequency': '空气感频率',
+    'Air gain': '空气感增益',
+    'Wet mix': '湿声比例',
+    'Decay time': '衰减时间',
+    'Decay shape': '衰减曲线',
+    Time: '时间',
+    Feedback: '反馈',
+    Ceiling: '上限',
+    'Final protection before monitoring and processed recording.': '在监听和录制处理后音频之前提供最终保护。',
+    'Analysis engine': '分析引擎',
+    'FFT size': 'FFT 大小',
+    Smoothing: '平滑度',
+    'Minimum dB': '最低 dB',
+    'Maximum dB': '最高 dB',
+    'Reference A4': 'A4 参考频率',
+    'YIN threshold': 'YIN 阈值',
+    Sine: '正弦波',
+    Triangle: '三角波',
+    Sawtooth: '锯齿波',
+    Square: '方波',
+    Window: '窗函数',
+    'Built-in DSP profile': '内置 DSP 配置',
+    'Local custom preset': '本地自定义预设',
+    'Factory presets': '出厂预设',
+    'Custom presets': '自定义预设',
+    'My vocal setup': '我的人声设置',
+    'No custom presets yet.': '还没有自定义预设。',
+    'Clean Vocal': '纯净人声',
+    'Polished Vocal': '精修人声',
+    'Noisy Room': '嘈杂房间',
+    'Speech Clarity': '语音清晰度',
+    'Wide Instrument': '宽频乐器',
+    'Secure context': '安全上下文',
+    'Cross-origin isolated': '跨源隔离',
+    'CPU threads': 'CPU 线程',
+    'Device memory': '设备内存',
+    Platform: '平台',
+    Status: '状态',
+    'Analyzing…': '正在分析…',
+    'Crest factor': '峰均比',
+    'Zero crossings': '过零率',
+    'Settings reset': '设置已重置',
+    Copied: '已复制',
+    'Microphone started': '麦克风已启动',
+    'Enter preset name': '请输入预设名称',
+    'Preset saved': '预设已保存',
+    'Settings imported': '设置已导入',
+    'Start microphone first': '请先启动麦克风',
+    'No recording': '没有录音',
+    'Recording failed': '录音失败',
+    'getUserMedia unavailable': '浏览器不支持麦克风访问',
+    'DSP library unavailable': 'DSP 库不可用'
+  });
   const BUILTIN_PRESETS = {
     'Clean Vocal': {
       highpassEnabled: true,
@@ -1256,6 +1416,7 @@
       this.lastFrame = null;
       this.visualFrame = 0;
       this.toastTimer = 0;
+      this.translationObserver = null;
     }
     async context() {
       if (this.engine.ctx) return this.engine.ctx;
@@ -1266,6 +1427,26 @@
     }
     t(k) {
       return I18N[this.settings.language]?.[k] || I18N.en[k] || k;
+    }
+    inlineText(value) {
+      if (this.settings.language !== 'zh') return value;
+      if (value.startsWith('Preset: ')) return `预设：${value.slice(8)}`;
+      return ZH_INLINE[value] || value;
+    }
+    localizeInlineChinese() {
+      if (this.settings.language !== 'zh') return;
+      const walker = document.createTreeWalker(this.shadow, NodeFilter.SHOW_TEXT);
+      let node = walker.nextNode();
+      while (node) {
+        const raw = node.nodeValue || '';
+        const value = raw.trim();
+        const translated = this.inlineText(value);
+        if (value && translated !== value) node.nodeValue = raw.replace(value, translated);
+        node = walker.nextNode();
+      }
+      this.qa('input[placeholder]').forEach((input) => {
+        input.placeholder = this.inlineText(input.placeholder);
+      });
     }
     mount() {
       if (document.getElementById('openvox-pro-lab-host')) return;
@@ -1279,7 +1460,7 @@
     }
     render() {
       const t = (k) => this.t(k);
-      this.shadow.innerHTML = `<style>${LAB_CSS}</style><button class="fab" id="ovxpro-fab" aria-label="${t('title')}">${icon('lab')}</button><div class="overlay" id="ovxpro-overlay"><div class="panel"><div class="head"><div class="brand"><div class="mark">${icon('lab')}</div><div><h2>${t('title')}</h2><p>${t('subtitle')} · ${OVXPRO_VERSION}</p></div></div><div class="head-actions"><span class="status" id="ovxpro-status">${t('statusIdle')}</span><select id="ovxpro-language" style="width:auto;min-height:36px"><option value="en">EN</option><option value="uk">UK</option><option value="de">DE</option></select><button class="ib" id="ovxpro-close" aria-label="${t('close')}">${icon('close')}</button></div></div><div class="tabs">${[
+      this.shadow.innerHTML = `<style>${LAB_CSS}</style><button class="fab" id="ovxpro-fab" aria-label="${t('title')}">${icon('lab')}</button><div class="overlay" id="ovxpro-overlay"><div class="panel"><div class="head"><div class="brand"><div class="mark">${icon('lab')}</div><div><h2>${t('title')}</h2><p>${t('subtitle')} · ${OVXPRO_VERSION}</p></div></div><div class="head-actions"><span class="status" id="ovxpro-status">${t('statusIdle')}</span><select id="ovxpro-language" style="width:auto;min-height:36px"><option value="en">EN</option><option value="uk">UK</option><option value="de">DE</option><option value="zh">中文</option></select><button class="ib" id="ovxpro-close" aria-label="${t('close')}">${icon('close')}</button></div></div><div class="tabs">${[
         ['input', t('input')],
         ['dsp', t('dsp')],
         ['instruments', t('instruments')],
@@ -1296,6 +1477,10 @@
           ''
         )}</div><div class="body">${this.pageInput()}${this.pageDSP()}${this.pageInstruments()}${this.pageVisual()}${this.pageOffline()}${this.pagePresets()}${this.pageDiagnostics()}</div></div></div><div class="toast" id="ovxpro-toast"></div>`;
       this.q('#ovxpro-language').value = this.settings.language;
+      this.translationObserver?.disconnect();
+      this.translationObserver = new MutationObserver(() => this.localizeInlineChinese());
+      this.translationObserver.observe(this.shadow, { childList: true, subtree: true });
+      this.localizeInlineChinese();
       this.bind();
     }
     q(sel) {

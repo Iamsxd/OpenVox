@@ -128,7 +128,7 @@ export function AnalyzePage() {
       <Seo title={t('analyze.title')} description={t('analyze.subtitle')} path="/analyze" />
       <div className="page-header">
         <div className="page-title-wrap">
-          <div className="eyebrow">OpenVox Metrics</div>
+          <div className="eyebrow">{t('analyze.eyebrow')}</div>
           <h1>{t('analyze.title')}</h1>
           <p>{t('analyze.subtitle')}</p>
         </div>

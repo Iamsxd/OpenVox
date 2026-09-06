@@ -1,16 +1,22 @@
 import { describe, expect, it } from 'vitest';
-import type { AppSettings, OpenVoxProject, RecordingEntry, TrainingSessionEntry } from '../src/types';
+import type { AppSettings, OpenVoxProject, PracticeGoal, RecordingEntry, TrainingSessionEntry } from '../src/types';
 import {
+  applyTrainingSyncSnapshot,
+  claimTrainingSyncOwner,
   deleteProject,
+  deleteTrainingSession,
   getProject,
   listProjects,
+  listPracticeGoals,
   listRecordings,
+  listSyncDeletions,
   listTrainingSessions,
   loadSettings,
   saveProject,
+  savePracticeGoal,
   saveRecording,
   saveSettings,
-  saveTrainingSession
+  saveTrainingSession,
 } from '../src/core/storage/database';
 
 function project(id: string, updatedAt: number): OpenVoxProject {
@@ -20,7 +26,12 @@ function project(id: string, updatedAt: number): OpenVoxProject {
     createdAt: updatedAt - 10,
     updatedAt,
     pitchHistory: [],
-    settings: { processingMode: 'vocal', noiseFloor: 0.008, gateMultiplier: 1.8, referenceA4: 440 },
+    settings: {
+      processingMode: 'vocal',
+      noiseFloor: 0.008,
+      gateMultiplier: 1.8,
+      referenceA4: 440,
+    },
     score: {
       id: `score-${id}`,
       title: 'Test',
@@ -30,8 +41,8 @@ function project(id: string, updatedAt: number): OpenVoxProject {
       keyFifths: 0,
       notes: [],
       createdAt: updatedAt - 10,
-      updatedAt
-    }
+      updatedAt,
+    },
   };
 }
 
@@ -44,7 +55,6 @@ describe('local IndexedDB storage', () => {
       processingMode: 'noisy',
       gateMultiplier: 2.5,
       microphoneId: 'test-mic',
-      analyticsEnabled: false,
       audio: {
         requestedSampleRate: 48000,
         channelCount: 1,
@@ -55,9 +65,13 @@ describe('local IndexedDB storage', () => {
         minimumPitchHz: 65,
         maximumPitchHz: 1400,
         confidenceThreshold: 0.6,
-        tunerToleranceCents: 5
+        tunerToleranceCents: 5,
       },
-      accessibility: { reducedMotion: false, highContrast: false, largeControls: false }
+      accessibility: {
+        reducedMotion: false,
+        highContrast: false,
+        largeControls: false,
+      },
     };
     await saveSettings(settings);
     await saveProject(project('older', 100));
@@ -77,7 +91,7 @@ describe('local IndexedDB storage', () => {
       mimeType: 'audio/webm',
       blob: new Blob(['voice'], { type: 'audio/webm' }),
       duration: 2,
-      createdAt: 300
+      createdAt: 300,
     };
 
     await saveProject(current);
@@ -103,12 +117,61 @@ describe('local IndexedDB storage', () => {
       durationSeconds: 60,
       accuracy: 92,
       hitRate: 88,
-      averageCents: 8.5
+      averageCents: 8.5,
     };
     await saveProject(current);
     await saveTrainingSession(session);
     expect((await listTrainingSessions(current.id)).map((item) => item.id)).toEqual(['session-1']);
     await deleteProject(current.id);
     expect(await listTrainingSessions(current.id)).toHaveLength(0);
+  });
+
+  it('merges remote training data and acknowledges deletion markers', async () => {
+    const localSession: TrainingSessionEntry = {
+      id: 'local-session',
+      projectId: 'project-local',
+      exerciseId: 'pitch-match',
+      exerciseName: 'Pitch match',
+      category: 'pitch',
+      difficulty: 'beginner',
+      startedAt: 1000,
+      completedAt: 1060,
+      durationSeconds: 60,
+    };
+    const localGoal: PracticeGoal = {
+      id: 'local-goal',
+      title: 'Weekly practice',
+      category: 'general',
+      targetMinutesPerWeek: 120,
+      createdAt: 1000,
+      active: true,
+    };
+    await saveTrainingSession(localSession);
+    await savePracticeGoal(localGoal);
+    await deleteTrainingSession(localSession.id);
+    const deletion = (await listSyncDeletions())[0];
+    expect(deletion?.entityId).toBe(localSession.id);
+
+    const remoteSession: TrainingSessionEntry = {
+      ...localSession,
+      id: 'remote-session',
+      updatedAt: 2000,
+    };
+    await applyTrainingSyncSnapshot(
+      [remoteSession],
+      [],
+      [{ entityType: 'practiceGoal', entityId: localGoal.id, deletedAt: Date.now() + 1000 }],
+      deletion ? [deletion] : [],
+    );
+
+    expect((await listTrainingSessions()).map((item) => item.id)).toEqual(['remote-session']);
+    expect(await listPracticeGoals()).toHaveLength(0);
+    expect(await listSyncDeletions()).toHaveLength(0);
+  });
+
+  it('binds a local training library to one account', async () => {
+    expect(await claimTrainingSyncOwner('user-a')).toBe(true);
+    expect(await claimTrainingSyncOwner('user-a')).toBe(true);
+    expect(await claimTrainingSyncOwner('user-b')).toBe(false);
   });
 });

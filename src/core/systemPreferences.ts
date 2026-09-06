@@ -15,7 +15,7 @@ function readPreference(key: string): string | null {
 
 export function getInitialLanguagePreference(): Language {
   const saved = readPreference(LANGUAGE_KEY);
-  return saved === 'en' || saved === 'uk' || saved === 'de' ? saved : detectSystemLanguage();
+  return saved === 'en' || saved === 'uk' || saved === 'de' || saved === 'zh' ? saved : detectSystemLanguage();
 }
 
 export function getInitialThemePreference(): ThemeMode {

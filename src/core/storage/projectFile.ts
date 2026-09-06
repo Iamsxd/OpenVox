@@ -1,6 +1,5 @@
 import type { OpenVoxProject, RecordingEntry } from '../../types';
 import { downloadBlob } from '../export/scoreExport';
-import { notifySupportOpportunity } from '../support';
 import { synchronizeNotePitch } from '../music/notes';
 
 interface OpenVoxArchive {
@@ -28,24 +27,26 @@ export async function exportOpenVoxProject(project: OpenVoxProject, recordings: 
       mimeType: recording.mimeType,
       duration: recording.duration,
       createdAt: recording.createdAt,
-      dataUrl: await blobToDataUrl(recording.blob)
-    }))
+      dataUrl: await blobToDataUrl(recording.blob),
+    })),
   );
   const archive: OpenVoxArchive = {
     format: 'OpenVoxProject',
     version: 1,
     exportedAt: new Date().toISOString(),
     project,
-    recordings: archivedRecordings
+    recordings: archivedRecordings,
   };
   downloadBlob(
-    new Blob([JSON.stringify(archive)], { type: 'application/vnd.openvox.project+json' }),
-    `${safeName(project.name)}.openvox`
+    new Blob([JSON.stringify(archive)], {
+      type: 'application/vnd.openvox.project+json',
+    }),
+    `${safeName(project.name)}.openvox`,
   );
 }
 
 export async function importOpenVoxProject(
-  file: File
+  file: File,
 ): Promise<{ project: OpenVoxProject; recordings: RecordingEntry[] }> {
   const text = await file.text();
   const archive = JSON.parse(text) as OpenVoxArchive;
@@ -59,22 +60,25 @@ export async function importOpenVoxProject(
       mimeType: recording.mimeType,
       duration: recording.duration,
       createdAt: recording.createdAt,
-      blob: await (await fetch(recording.dataUrl)).blob()
-    }))
+      blob: await (await fetch(recording.dataUrl)).blob(),
+    })),
   );
   const project = {
     ...archive.project,
     score: {
       ...archive.project.score,
-      notes: archive.project.score.notes.map(synchronizeNotePitch)
-    }
+      notes: archive.project.score.notes.map(synchronizeNotePitch),
+    },
   };
   return { project, recordings };
 }
 
 export async function saveBlobToDevice(blob: Blob, suggestedName: string, mimeType: string): Promise<void> {
-  const picker = (window as Window & { showSaveFilePicker?: (options: unknown) => Promise<FileSystemFileHandle> })
-    .showSaveFilePicker;
+  const picker = (
+    window as Window & {
+      showSaveFilePicker?: (options: unknown) => Promise<FileSystemFileHandle>;
+    }
+  ).showSaveFilePicker;
   if (picker) {
     const extension = suggestedName.includes('.') ? `.${suggestedName.split('.').pop()}` : '';
     const handle = await picker({
@@ -82,14 +86,15 @@ export async function saveBlobToDevice(blob: Blob, suggestedName: string, mimeTy
       types: [
         {
           description: 'OpenVox media',
-          accept: { [mimeType || 'application/octet-stream']: extension ? [extension] : [] }
-        }
-      ]
+          accept: {
+            [mimeType || 'application/octet-stream']: extension ? [extension] : [],
+          },
+        },
+      ],
     });
     const writable = await handle.createWritable();
     await writable.write(blob);
     await writable.close();
-    notifySupportOpportunity();
     return;
   }
   downloadBlob(blob, suggestedName);

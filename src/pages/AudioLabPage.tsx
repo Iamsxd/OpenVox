@@ -3,6 +3,7 @@ import { Icon } from '../components/Icon';
 import { Seo } from '../components/Seo';
 import { useI18n } from '../i18n/I18nContext';
 import { proText } from '../i18n/proTranslations';
+import { loadProAudioLab } from '../proLabLoader';
 
 declare global {
   interface Window {
@@ -15,20 +16,36 @@ export function AudioLabPage() {
   const x = (key: string) => proText(language, key);
   const [ready, setReady] = useState(Boolean(window.openOpenVoxProLab));
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      if (window.openOpenVoxProLab) {
-        setReady(true);
-        window.clearInterval(timer);
-      }
-    }, 200);
-    return () => window.clearInterval(timer);
-  }, []);
+    let active = true;
+    const labRoot = () => document.getElementById('openvox-pro-lab-host')?.shadowRoot;
+    const removeGlobalLauncher = () => labRoot()?.getElementById('ovxpro-fab')?.remove();
+    const syncLabLanguage = () => {
+      const select = labRoot()?.getElementById('ovxpro-language') as HTMLSelectElement | null;
+      if (!select || select.value === language) return;
+      select.value = language;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+
+    removeGlobalLauncher();
+    syncLabLanguage();
+    void loadProAudioLab()
+      .then(() => {
+        removeGlobalLauncher();
+        syncLabLanguage();
+        if (active) setReady(Boolean(window.openOpenVoxProLab));
+      })
+      .catch((error) => console.error('OpenVox Pro Audio Lab failed to initialize.', error));
+
+    return () => {
+      active = false;
+    };
+  }, [language]);
   const open = (tab = 'input') => window.openOpenVoxProLab?.(tab);
   return (
     <div className="page">
       <Seo
-        title="Professional Audio Lab"
-        description="Advanced browser audio routing, filters, dynamics, metronome, generators, spectrum tools and file analysis in OpenVox Studio."
+        title={x('lab.title')}
+        description={x('lab.body')}
         path="/audio-lab"
       />
       <div className="page-header">

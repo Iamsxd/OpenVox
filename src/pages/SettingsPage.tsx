@@ -22,14 +22,20 @@ export function SettingsPage() {
     void refreshDevices();
   }, []);
   const updateAudio = <K extends keyof typeof settings.audio>(key: K, value: (typeof settings.audio)[K]) =>
-    setSettings((current) => ({ ...current, audio: { ...current.audio, [key]: value } }));
+    setSettings((current) => ({
+      ...current,
+      audio: { ...current.audio, [key]: value },
+    }));
   const updateAccess = <K extends keyof typeof settings.accessibility>(key: K, value: boolean) =>
-    setSettings((current) => ({ ...current, accessibility: { ...current.accessibility, [key]: value } }));
+    setSettings((current) => ({
+      ...current,
+      accessibility: { ...current.accessibility, [key]: value },
+    }));
   return (
     <div className="page page-narrow">
       <Seo
         title={t('settings.title')}
-        description="OpenVox Studio language, appearance, accessibility, tuning and professional local audio preferences."
+        description={x('settings.body')}
         path="/settings"
       />
       <div className="page-header">
@@ -48,18 +54,22 @@ export function SettingsPage() {
         <div className="setting-row">
           <div>
             <h3>{t('settings.language')}</h3>
-            <p>English · Українська · Deutsch</p>
+            <p>English · Українська · Deutsch · 简体中文</p>
           </div>
           <select
             aria-label={t('settings.language')}
             value={settings.language}
             onChange={(e) =>
-              setSettings((current) => ({ ...current, language: e.target.value as typeof settings.language }))
+              setSettings((current) => ({
+                ...current,
+                language: e.target.value as typeof settings.language,
+              }))
             }
           >
             <option value="en">English</option>
             <option value="uk">Українська</option>
             <option value="de">Deutsch</option>
+            <option value="zh">简体中文</option>
           </select>
         </div>
         <div className="setting-row">
@@ -70,7 +80,12 @@ export function SettingsPage() {
           <select
             aria-label={t('settings.theme')}
             value={settings.theme}
-            onChange={(e) => setSettings((current) => ({ ...current, theme: e.target.value as typeof settings.theme }))}
+            onChange={(e) =>
+              setSettings((current) => ({
+                ...current,
+                theme: e.target.value as typeof settings.theme,
+              }))
+            }
           >
             <option value="system">{t('settings.system')}</option>
             <option value="dark">{t('settings.dark')}</option>
@@ -137,7 +152,12 @@ export function SettingsPage() {
           <select
             aria-label={x('settings.preferredMic')}
             value={settings.microphoneId}
-            onChange={(e) => setSettings((current) => ({ ...current, microphoneId: e.target.value }))}
+            onChange={(e) =>
+              setSettings((current) => ({
+                ...current,
+                microphoneId: e.target.value,
+              }))
+            }
           >
             <option value="">{x('settings.defaultInput')}</option>
             {devices.map((device) => (
@@ -199,7 +219,7 @@ export function SettingsPage() {
           [
             ['echoCancellation', 'settings.echo'],
             ['noiseSuppression', 'settings.noise'],
-            ['autoGainControl', 'settings.agc']
+            ['autoGainControl', 'settings.agc'],
           ] as const
         ).map(([key, labelKey]) => (
           <div className="setting-row" key={key}>
@@ -238,7 +258,7 @@ export function SettingsPage() {
             onChange={(e) =>
               setSettings((current) => ({
                 ...current,
-                referenceA4: Math.max(400, Math.min(480, Number(e.target.value)))
+                referenceA4: Math.max(400, Math.min(480, Number(e.target.value))),
               }))
             }
           />
@@ -310,29 +330,13 @@ export function SettingsPage() {
             max="4"
             step="0.1"
             value={settings.gateMultiplier}
-            onChange={(e) => setSettings((current) => ({ ...current, gateMultiplier: Number(e.target.value) }))}
+            onChange={(e) =>
+              setSettings((current) => ({
+                ...current,
+                gateMultiplier: Number(e.target.value),
+              }))
+            }
           />
-        </div>
-      </section>
-
-      <section className="card panel settings-section">
-        <div className="card-title">
-          <h2>{x('settings.privacyTelemetry')}</h2>
-          <span className="badge">{x('settings.optOut')}</span>
-        </div>
-        <div className="setting-row">
-          <div>
-            <h3>{t('settings.analytics')}</h3>
-            <p>{t('settings.analyticsInfo')}</p>
-          </div>
-          <button
-            className={`switch ${settings.analyticsEnabled ? 'on' : ''}`}
-            onClick={() => setSettings((current) => ({ ...current, analyticsEnabled: !current.analyticsEnabled }))}
-            aria-label={t('settings.analytics')}
-            aria-pressed={settings.analyticsEnabled}
-          >
-            <span />
-          </button>
         </div>
       </section>
     </div>

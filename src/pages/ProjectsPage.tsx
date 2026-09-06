@@ -18,7 +18,7 @@ export function ProjectsPage() {
   useEffect(refresh, []);
 
   const create = async () => {
-    const project = createProject(`OpenVox Project ${new Date().toLocaleDateString()}`);
+    const project = createProject(`${t('projects.defaultName')} ${new Date().toLocaleDateString()}`);
     await saveProject(project);
     refresh();
     navigate('/studio');

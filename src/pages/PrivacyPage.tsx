@@ -1,8 +1,10 @@
 import { Seo } from '../components/Seo';
 import { useI18n } from '../i18n/I18nContext';
+import { accountText } from '../i18n/accountTranslations';
 
 export function PrivacyPage() {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
+  const x = (key: string) => accountText(language, key);
   return (
     <div className="page page-narrow">
       <Seo title={t('privacy.title')} description={t('privacy.body')} path="/privacy" />
@@ -16,6 +18,8 @@ export function PrivacyPage() {
       <section className="card panel">
         <h2>{t('privacy.localTitle')}</h2>
         <p className="hint">{t('privacy.localText')}</p>
+        <h2>{x('account.syncTitle')}</h2>
+        <p className="hint">{x('account.privacyBody')}</p>
         <h2>{t('privacy.analyticsTitle')}</h2>
         <p className="hint">{t('privacy.analyticsText')}</p>
         <h2>{t('privacy.speechTitle')}</h2>

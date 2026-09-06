@@ -430,8 +430,8 @@ export function AcademyPage() {
   return (
     <div className="page">
       <Seo
-        title="Vocal Academy"
-        description="Structured vocal training, pitch matching, breath pacing, ear training, rhythm work and exercise planning in OpenVox Studio."
+        title={x('academy.title')}
+        description={x('academy.body')}
         path="/academy"
       />
       <div className="page-header">

@@ -6,11 +6,15 @@ import {
   deleteTrainingSession,
   listPracticeGoals,
   listTrainingSessions,
-  savePracticeGoal
+  savePracticeGoal,
+  TRAINING_SYNCED_EVENT,
 } from '../core/storage/database';
 import type { PracticeGoal, TrainingCategory, TrainingSessionEntry } from '../types';
 import { useI18n } from '../i18n/I18nContext';
 import { proText, trainingCategoryName } from '../i18n/proTranslations';
+import { useAuth } from '../app/AuthContext';
+import { accountText } from '../i18n/accountTranslations';
+import { Link } from 'react-router-dom';
 
 function weekStart(timestamp = Date.now()) {
   const date = new Date(timestamp);
@@ -26,8 +30,10 @@ function formatDuration(seconds: number) {
 }
 
 export function ProgressPage() {
-  const { language } = useI18n();
+  const { t, language } = useI18n();
   const x = (key: string) => proText(language, key);
+  const ax = (key: string) => accountText(language, key);
+  const { user, syncStatus, syncNow } = useAuth();
   const [sessions, setSessions] = useState<TrainingSessionEntry[]>([]);
   const [goals, setGoals] = useState<PracticeGoal[]>([]);
   const [goalTitle, setGoalTitle] = useState(() => proText(language, 'progress.weeklyDefault'));
@@ -40,6 +46,8 @@ export function ProgressPage() {
   };
   useEffect(() => {
     void reload();
+    window.addEventListener(TRAINING_SYNCED_EVENT, reload);
+    return () => window.removeEventListener(TRAINING_SYNCED_EVENT, reload);
   }, []);
 
   const stats = useMemo(() => {
@@ -84,8 +92,8 @@ export function ProgressPage() {
   return (
     <div className="page">
       <Seo
-        title="Progress & Practice History"
-        description="Local vocal training history, weekly goals, practice minutes and accuracy trends in OpenVox Studio."
+        title={x('progress.title')}
+        description={x('progress.body')}
         path="/progress"
       />
       <div className="page-header">
@@ -95,6 +103,23 @@ export function ProgressPage() {
           <p>{x('progress.body')}</p>
         </div>
       </div>
+      <section className={`practice-sync-banner ${user ? 'connected' : 'guest'}`}>
+        <span className={`sync-dot ${syncStatus}`} />
+        <span>{user ? ax('progress.cloudSynced') : ax('progress.guestLocal')}</span>
+        {user ? (
+          <button
+            className="mini-button"
+            disabled={syncStatus === 'syncing'}
+            onClick={() => void syncNow().then(reload).catch(() => undefined)}
+          >
+            {syncStatus === 'syncing' ? ax('account.syncing') : ax('account.syncNow')}
+          </button>
+        ) : (
+          <Link className="mini-button" to="/account">
+            {ax('progress.manageAccount')}
+          </Link>
+        )}
+      </section>
       <div className="progress-summary-grid">
         <section className="card metric-card">
           <span>{x('progress.thisWeek')}</span>
@@ -165,7 +190,7 @@ export function ProgressPage() {
         <section className="card panel span-5">
           <div className="card-title">
             <h2>{x('progress.goals')}</h2>
-            <span className="badge">Local</span>
+            <span className="badge">{t('common.local')}</span>
           </div>
           <div className="field">
             <label>{x('progress.goal')}</label>

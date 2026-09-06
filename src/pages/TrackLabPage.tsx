@@ -36,7 +36,7 @@ function createPeaks(buffer: AudioBuffer, bins = 480) {
 
 export function TrackLabPage() {
   const { settings, project } = useApp();
-  const { language } = useI18n();
+  const { t, language } = useI18n();
   const x = (key: string) => proText(language, key);
   const audio = useAudioEngine(settings.referenceA4, settings.processingMode, settings.gateMultiplier);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -386,7 +386,7 @@ export function TrackLabPage() {
         <section className="card panel span-4">
           <div className="card-title">
             <h2>{x('track.liveVoice')}</h2>
-            <span className="badge">{audio.state.active ? x('track.listening') : 'Offline'}</span>
+            <span className="badge">{audio.state.active ? x('track.listening') : t('common.offline')}</span>
           </div>
           <div className="track-live-note">
             <strong>{audio.pitch ? `${audio.pitch.note}${audio.pitch.octave}` : '—'}</strong>

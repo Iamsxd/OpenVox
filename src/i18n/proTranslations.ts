@@ -1,6 +1,7 @@
 import type { Language, TrainingCategory, TrainingDifficulty } from '../types';
 import type { TrainingExerciseDefinition } from '../core/training/trainingLibrary';
 import { translateExercise } from './exerciseTranslations';
+import { zhProTranslations } from './zhProTranslations';
 
 type Copy = Record<string, string>;
 
@@ -113,7 +114,7 @@ const en: Copy = {
   'progress.eyebrow': 'OpenVox Progress',
   'progress.title': 'Practice that leaves a trace.',
   'progress.body':
-    'Your session history stays in local browser storage. Track time, consistency, accuracy and category balance without creating an account.',
+    'Track time, consistency, accuracy and category balance locally. Sign in only if you want to synchronize practice summaries across devices.',
   'progress.thisWeek': 'This week',
   'progress.sessions': 'sessions',
   'progress.avgAccuracy': 'Average accuracy',
@@ -603,7 +604,9 @@ const de: Copy = {
   'settings.optOut': 'Abwählbar'
 };
 
-const academyExtraTranslations: Record<Language, Copy> = {
+const zh: Copy = zhProTranslations;
+
+const academyExtraTranslations: Record<Exclude<Language, 'zh'>, Copy> = {
   en: {
     'academy.tab.guide': 'Vocal guide',
     'academy.guideBadge': 'Technique',
@@ -639,7 +642,7 @@ Object.assign(en, academyExtraTranslations.en);
 Object.assign(uk, academyExtraTranslations.uk);
 Object.assign(de, academyExtraTranslations.de);
 
-const instrumentExtraTranslations: Record<Language, Copy> = {
+const instrumentExtraTranslations: Record<Exclude<Language, 'zh'>, Copy> = {
   en: {
     'instrument.transpose': 'Transpose tuning',
     'instrument.transposeHelp': 'Shift every target string together for capo or alternate-pitch practice.',
@@ -660,7 +663,7 @@ Object.assign(en, instrumentExtraTranslations.en);
 Object.assign(uk, instrumentExtraTranslations.uk);
 Object.assign(de, instrumentExtraTranslations.de);
 
-const mixerTranslations: Record<Language, Copy> = {
+const mixerTranslations: Record<Exclude<Language, 'zh'>, Copy> = {
   en: {
     'mixer.eyebrow': 'OpenVox Local Multitrack',
     'mixer.title': 'Build the rehearsal. Mix the take.',
@@ -780,7 +783,7 @@ Object.assign(en, mixerTranslations.en);
 Object.assign(uk, mixerTranslations.uk);
 Object.assign(de, mixerTranslations.de);
 
-const trackTranslations: Record<Language, Copy> = {
+const trackTranslations: Record<Exclude<Language, 'zh'>, Copy> = {
   en: {
     'track.eyebrow': 'OpenVox Backing Track Lab',
     'track.title': 'Rehearse the passage, not the whole song.',
@@ -900,7 +903,7 @@ Object.assign(en, trackTranslations.en);
 Object.assign(uk, trackTranslations.uk);
 Object.assign(de, trackTranslations.de);
 
-const choirRehearsalTranslations: Record<Language, Copy> = {
+const choirRehearsalTranslations: Record<Exclude<Language, 'zh'>, Copy> = {
   en: {
     'choir.passage': 'Passage rehearsal',
     'choir.speed': 'Rehearsal tempo',
@@ -930,7 +933,7 @@ Object.assign(en, choirRehearsalTranslations.en);
 Object.assign(uk, choirRehearsalTranslations.uk);
 Object.assign(de, choirRehearsalTranslations.de);
 
-const landingTranslations: Record<Language, Copy> = {
+const landingTranslations: Record<Exclude<Language, 'zh'>, Copy> = {
   en: {
     'landing.academyTitle': 'A complete vocal learning system',
     'landing.academyBody':
@@ -1008,7 +1011,7 @@ Object.assign(en, landingTranslations.en);
 Object.assign(uk, landingTranslations.uk);
 Object.assign(de, landingTranslations.de);
 
-const scoreWorkflowTranslations: Record<Language, Copy> = {
+const scoreWorkflowTranslations: Record<Exclude<Language, 'zh'>, Copy> = {
   en: {
     'score.undo': 'Undo',
     'score.redo': 'Redo',
@@ -1194,7 +1197,7 @@ Object.assign(en, scoreWorkflowTranslations.en);
 Object.assign(uk, scoreWorkflowTranslations.uk);
 Object.assign(de, scoreWorkflowTranslations.de);
 
-const dictionaries: Record<Language, Copy> = { en, uk, de };
+const dictionaries: Record<Language, Copy> = { en, uk, de, zh };
 export const PRO_TRANSLATION_KEYS = Object.freeze(Object.keys(en));
 
 export function proText(language: Language, key: string): string {
@@ -1237,6 +1240,18 @@ const categoryNames: Record<Language, Record<TrainingCategory, string>> = {
     rhythm: 'Rhythmus',
     dynamics: 'Dynamik',
     cooldown: 'Cooldown'
+  },
+  zh: {
+    warmup: '热身',
+    pitch: '音准',
+    agility: '灵活性',
+    breath: '呼吸',
+    resonance: '共鸣',
+    articulation: '咬字',
+    ear: '听音训练',
+    rhythm: '节奏',
+    dynamics: '力度',
+    cooldown: '放松'
   }
 };
 
@@ -1307,6 +1322,35 @@ const exerciseNames: Record<Language, Record<string, string>> = {
     'syncopation-grid': 'Synkopenraster',
     'descending-hum': 'Absteigendes Summen',
     'gentle-sigh': 'Sanfter Seufzer'
+  },
+  zh: {
+    'lip-trill-5tone': '五音唇颤练习',
+    'ng-siren': 'NG 共鸣滑音',
+    'straw-flow': '半闭合声道气流练习',
+    'major-scale-legato': '大调音阶连唱',
+    'major-arpeggio': '大调琶音',
+    'minor-arpeggio': '小调琶音',
+    'chromatic-5': '五音半音阶练习',
+    'rossini-scale': '快速八度音阶',
+    'thirds-pattern': '三度音程音阶',
+    'fifth-jumps': '纯五度跳进',
+    'octave-jumps': '八度跳进',
+    'messa-di-voce-lite': '渐强渐弱控制',
+    'long-tone-stability': '长音稳定性',
+    'vibrato-observation': '颤音观察',
+    'breath-4-2-8': '4–2–8 呼吸循环',
+    'breath-4-4-12': '4–4–12 呼吸循环',
+    'fricative-sustain': '擦音气流保持',
+    'vowel-chain': '元音链练习',
+    'consonant-agility': '辅音灵活性',
+    'pitch-memory': '音高记忆',
+    'interval-identification': '音程辨认',
+    'interval-singback': '音程模唱',
+    'steady-pulse': '稳定节拍',
+    'subdivision-switch': '节拍细分切换',
+    'syncopation-grid': '切分节奏练习',
+    'descending-hum': '下行哼鸣放松',
+    'gentle-sigh': '轻柔叹气放松'
   }
 };
 

@@ -17,8 +17,8 @@ const routes = [
   'choir',
   'projects',
   'settings',
-  'privacy',
-  'about'
+  'account',
+  'privacy'
 ];
 const dist = resolve('dist');
 const expectedBase = process.env.OPENVOX_BASE || '/';
@@ -63,13 +63,11 @@ if (!html.includes(`href=\"${normalizedBase}openvox-icon.svg\"`))
   throw new Error('Production icon URL does not use the configured Pages base.');
 if (!html.includes(`<link rel="canonical" href="${publicUrl}/" />`))
   throw new Error('Home canonical URL is incorrect.');
-if (!html.includes('https://www.googletagmanager.com/gtag/js?id=G-6LN7QL6SP2'))
-  throw new Error('Google Analytics loader is missing from the production HTML.');
-if (!html.includes("gtag('config', 'G-6LN7QL6SP2')"))
-  throw new Error('Google Analytics measurement configuration is missing from the production HTML.');
+if (/googletagmanager\.com|google-analytics\.com|G-6LN7QL6SP2/i.test(html))
+  throw new Error('Production HTML must not contain Google Analytics.');
 if (!html.includes('data-theme="system"'))
   throw new Error('System theme bootstrap is missing from the production HTML.');
-if (!html.includes("primary === 'uk' ? 'uk' : primary === 'de' ? 'de' : 'en'"))
+if (!html.includes("primary === 'zh' ? 'zh' : primary === 'uk' ? 'uk' : primary === 'de' ? 'de' : 'en'"))
   throw new Error('Automatic interface-language bootstrap is missing from the production HTML.');
 
 const assetDir = resolve(dist, 'assets');
@@ -77,6 +75,8 @@ const assetFiles = await readdir(assetDir);
 const appBundleName = assetFiles.find((name) => name.startsWith('index-') && name.endsWith('.js'));
 if (!appBundleName) throw new Error('Application JavaScript bundle is missing.');
 const appBundle = await readFile(resolve(assetDir, appBundleName), 'utf8');
+if (/googletagmanager\.com|google-analytics\.com|G-6LN7QL6SP2/i.test(appBundle))
+  throw new Error('Application bundle must not contain Google Analytics.');
 if (!appBundle.includes(normalizedBase) || !appBundle.includes('pro-lab/dsp-library.js'))
   throw new Error('Pro Audio Lab DSP path does not use the configured Pages base.');
 if (!appBundle.includes('pro-lab/pro-audio-lab.js'))

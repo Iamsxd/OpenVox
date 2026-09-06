@@ -132,7 +132,7 @@ export function TranscribePage() {
       <Seo title={t('transcribe.title')} description={t('transcribe.subtitle')} path="/transcribe" />
       <div className="page-header">
         <div className="page-title-wrap">
-          <div className="eyebrow">OpenVox Transcription</div>
+          <div className="eyebrow">{t('transcribe.eyebrow')}</div>
           <h1>{t('transcribe.title')}</h1>
           <p>{t('transcribe.subtitle')}</p>
         </div>

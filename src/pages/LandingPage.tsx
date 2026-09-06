@@ -3,73 +3,146 @@ import { Seo } from '../components/Seo';
 import { Icon } from '../components/Icon';
 import { useI18n } from '../i18n/I18nContext';
 import { proText } from '../i18n/proTranslations';
-import { AuthorCard } from '../components/AuthorCard';
 
 export function LandingPage() {
   const { t, language } = useI18n();
   const x = (key: string) => proText(language, key);
-  const features = [
-    ['shield', 'home.privacyTitle', 'home.privacyBody', '/privacy'],
-    ['mic', 'home.pitchTitle', 'home.pitchBody', '/studio'],
-    ['music', 'landing.academyTitle', 'landing.academyBody', '/academy'],
-    ['spark', 'landing.instrumentsTitle', 'landing.instrumentsBody', '/instruments'],
-    ['wave', 'landing.trackTitle', 'landing.trackBody', '/track-lab'],
-    ['settings', 'landing.mixerTitle', 'landing.mixerBody', '/mixer'],
-    ['chart', 'landing.audioLabTitle', 'landing.audioLabBody', '/audio-lab'],
-    ['score', 'home.scoreTitle', 'home.scoreBody', '/score'],
-    ['users', 'landing.choirTitle', 'landing.choirBody', '/choir'],
-    ['chart', 'landing.progressTitle', 'landing.progressBody', '/progress']
+  const primaryTools = [
+    ['mic', 'nav.studio', 'home.pitchBody', '/studio'],
+    ['music', 'nav.practice', 'home.practiceBody', '/practice'],
+    ['spark', 'nav.academy', 'landing.academyBody', '/academy'],
+    ['chart', 'nav.analyze', 'home.analyzeBody', '/analyze'],
   ] as const;
+  const moreTools = [
+    ['wave', 'nav.transcribe', '/transcribe'],
+    ['score', 'nav.score', '/score'],
+    ['music', 'nav.instruments', '/instruments'],
+    ['wave', 'nav.trackLab', '/track-lab'],
+    ['settings', 'nav.mixer', '/mixer'],
+    ['users', 'nav.choir', '/choir'],
+    ['settings', 'nav.audioLab', '/audio-lab'],
+    ['chart', 'nav.progress', '/progress'],
+    ['folder', 'nav.projects', '/projects'],
+  ] as const;
+  const wave = [26, 44, 66, 38, 74, 92, 56, 32, 68, 84, 48, 28, 58, 78, 46, 64, 34, 52];
 
   return (
-    <div className="page">
+    <div className="page home-page">
       <Seo
-        title="Your voice. Understood."
-        description="Privacy-first voice analysis, vocal education, instrument tuning, multitrack rehearsal, transcription and score editing directly in your browser."
+        title={t('hero.title')}
+        description={t('hero.body')}
         path="/"
       />
-      <section className="hero">
-        <div className="hero-copy">
+      <section className="home-hero">
+        <div className="home-intro">
           <div className="eyebrow">{t('hero.eyebrow')}</div>
           <h1>{t('hero.title')}</h1>
           <p>{t('hero.body')}</p>
-          <div className="hero-actions">
+          <div className="home-actions">
             <Link className="button button-primary" to="/studio">
               <Icon name="mic" />
               {t('hero.open')}
             </Link>
-            <a className="button" href="#features">
+            <Link className="button" to="/practice">
+              <Icon name="music" />
+              {t('nav.practice')}
+            </Link>
+          </div>
+          <ul className="home-trust-list" aria-label={t('home.privacySummary')}>
+            <li>
+              <Icon name="shield" />
+              {t('home.onDevice')}
+            </li>
+            <li>
+              <Icon name="folder" />
+              {t('home.noAccount')}
+            </li>
+            <li>
               <Icon name="spark" />
-              {t('hero.learn')}
-            </a>
-          </div>
+              {t('home.noAnalytics')}
+            </li>
+          </ul>
         </div>
-        <div className="hero-visual" aria-hidden="true">
-          <div className="hero-orbit" />
-          <div className="hero-note-card">
-            <div className="big-note">A4</div>
-            <div className="freq">440.00 Hz · +0 cents</div>
-            <div className="meter">
-              <span style={{ width: '92%' }} />
-            </div>
-          </div>
-        </div>
-      </section>
-      <section className="feature-grid" id="features">
-        {features.map(([icon, title, body, path]) => (
-          <Link className="feature-card feature-card-link" to={path} key={title}>
-            <div className="feature-icon">
-              <Icon name={icon} />
-            </div>
-            <h2>{title.startsWith('home.') ? t(title) : x(title)}</h2>
-            <p>{body.startsWith('home.') ? t(body) : x(body)}</p>
-            <span className="feature-open">
-              {x('landing.openModule')} <Icon name="chevron" />
+        <div className="home-signal-console" aria-label={t('home.signalPreview')}>
+          <div className="home-signal-header">
+            <span>{t('home.signalPreview')}</span>
+            <span className="home-local-status">
+              <i /> {t('home.localStatus')}
             </span>
-          </Link>
-        ))}
+          </div>
+          <div className="home-signal-main">
+            <div className="home-note-lockup">
+              <strong>A4</strong>
+              <span>440.00 Hz</span>
+            </div>
+            <div className="home-wave" aria-hidden="true">
+              {wave.map((height, index) => (
+                <span key={`${height}-${index}`} style={{ height: `${height}%` }} />
+              ))}
+            </div>
+          </div>
+          <div className="home-signal-metrics">
+            <div>
+              <span>{t('home.detectedPitch')}</span>
+              <strong>A4</strong>
+            </div>
+            <div>
+              <span>{t('home.tuning')}</span>
+              <strong>+0 ct</strong>
+            </div>
+            <div>
+              <span>{t('home.confidence')}</span>
+              <strong>98%</strong>
+            </div>
+          </div>
+        </div>
       </section>
-      <AuthorCard />
+      <section className="home-section" aria-labelledby="home-start-title">
+        <div className="home-section-heading">
+          <div>
+            <div className="eyebrow">{t('home.workspaceEyebrow')}</div>
+            <h2 id="home-start-title">{t('home.startTitle')}</h2>
+          </div>
+          <p>{t('home.startBody')}</p>
+        </div>
+        <div className="home-primary-grid">
+          {primaryTools.map(([icon, title, body, path], index) => (
+            <Link className="home-action-card" to={path} key={title}>
+              <span className="home-card-index">0{index + 1}</span>
+              <div className="home-action-icon">
+                <Icon name={icon} />
+              </div>
+              <div>
+                <h3>{t(title)}</h3>
+                <p>{body.startsWith('home.') ? t(body) : x(body)}</p>
+              </div>
+              <span className="home-card-arrow" aria-hidden="true">
+                <Icon name="chevron" />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+      <section className="home-section home-tools-section" aria-labelledby="home-tools-title">
+        <div className="home-section-heading">
+          <div>
+            <div className="eyebrow">{t('home.toolsEyebrow')}</div>
+            <h2 id="home-tools-title">{t('home.toolsTitle')}</h2>
+          </div>
+          <p>{t('home.toolsBody')}</p>
+        </div>
+        <div className="home-tools-grid">
+          {moreTools.map(([icon, title, path]) => (
+            <Link to={path} key={title}>
+              <span>
+                <Icon name={icon} />
+              </span>
+              <strong>{t(title)}</strong>
+              <Icon name="chevron" />
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

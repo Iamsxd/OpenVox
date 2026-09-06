@@ -1,5 +1,6 @@
 import type { Language } from '../types';
 import type { TrainingExerciseDefinition } from '../core/training/trainingLibrary';
+import { zhExerciseTranslations } from './zhExerciseTranslations';
 
 type ExerciseCopy = { name?: string; description: string; instruction: string; focus: string[] };
 
@@ -283,7 +284,7 @@ const de: Record<string, ExerciseCopy> = {
   }
 };
 
-const copies: Partial<Record<Language, Record<string, ExerciseCopy>>> = { uk, de };
+const copies: Partial<Record<Language, Record<string, ExerciseCopy>>> = { uk, de, zh: zhExerciseTranslations };
 
 export function translateExercise(
   language: Language,

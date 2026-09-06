@@ -6,6 +6,8 @@ describe('system preferences', () => {
   it('maps supported browser languages to OpenVox languages', () => {
     expect(detectSystemLanguage(['uk-UA'])).toBe('uk');
     expect(detectSystemLanguage(['de-DE'])).toBe('de');
+    expect(detectSystemLanguage(['zh-CN'])).toBe('zh');
+    expect(detectSystemLanguage(['zh-Hans-CN'])).toBe('zh');
     expect(detectSystemLanguage(['en-US'])).toBe('en');
   });
 
@@ -26,5 +28,11 @@ describe('system preferences', () => {
     mirrorInterfacePreferences('de', 'dark');
     expect(getInitialLanguagePreference()).toBe('de');
     expect(getInitialThemePreference()).toBe('dark');
+  });
+
+  it('persists Chinese as an explicit interface preference', () => {
+    localStorage.clear();
+    mirrorInterfacePreferences('zh', 'system');
+    expect(getInitialLanguagePreference()).toBe('zh');
   });
 });

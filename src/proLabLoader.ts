@@ -17,12 +17,8 @@ function loadClassicScript(src: string) {
   return pending;
 }
 
-async function loadProAudioLab() {
+export async function loadProAudioLab() {
   const base = import.meta.env.BASE_URL;
   await loadClassicScript(`${base}pro-lab/dsp-library.js`);
   await loadClassicScript(`${base}pro-lab/pro-audio-lab.js`);
 }
-
-void loadProAudioLab().catch((error) => {
-  console.error('OpenVox Pro Audio Lab failed to initialize.', error);
-});

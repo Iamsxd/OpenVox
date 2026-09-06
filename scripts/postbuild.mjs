@@ -66,13 +66,13 @@ const pages = {
   ],
   settings: [
     'Settings',
-    'Configure language, theme, accessibility, tuning reference, audio processing and analytics preferences for OpenVox Studio.'
+    'Configure language, theme, accessibility, tuning reference and audio processing for OpenVox Studio.'
   ],
-  privacy: ['Privacy', 'Learn how OpenVox Studio processes microphone audio and project data locally on your device.'],
-  about: [
-    'About OpenVox Studio',
-    'OpenVox Studio is an open-source, privacy-first browser toolkit for singers, teachers, choirs and musicians by AuthorChe.'
-  ]
+  account: [
+    'Account',
+    'Optionally sign in to synchronize OpenVox practice summaries and goals across devices.'
+  ],
+  privacy: ['Privacy', 'Learn how OpenVox Studio processes microphone audio and project data locally on your device.']
 };
 
 function replaceTag(html, pattern, replacement) {

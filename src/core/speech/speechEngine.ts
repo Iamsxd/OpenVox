@@ -38,11 +38,11 @@ export class SpeechEngine {
       for (let i = event.resultIndex; i < event.results.length; i++) text += `${event.results[i][0].transcript} `;
       text = text.trim().toLowerCase();
       onText?.(text);
-      if (/\b(start|почати|старт|beginnen|starten)\b/.test(text)) handlers.start?.();
-      if (/\b(stop|стоп|зупини|anhalten|stopp)\b/.test(text)) handlers.stop?.();
-      if (/\b(record|запис|записати|aufnahme|aufnehmen)\b/.test(text)) handlers.record?.();
-      if (/\b(save|зберегти|speichern)\b/.test(text)) handlers.save?.();
-      if (/\b(calibrate|калібрувати|kalibrieren)\b/.test(text)) handlers.calibrate?.();
+      if (/\b(start|почати|старт|beginnen|starten)\b|开始|启动/.test(text)) handlers.start?.();
+      if (/\b(stop|стоп|зупини|anhalten|stopp)\b|停止|停下/.test(text)) handlers.stop?.();
+      if (/\b(record|запис|записати|aufnahme|aufnehmen)\b|录音|录制/.test(text)) handlers.record?.();
+      if (/\b(save|зберегти|speichern)\b|保存/.test(text)) handlers.save?.();
+      if (/\b(calibrate|калібрувати|kalibrieren)\b|校准|校正/.test(text)) handlers.calibrate?.();
     };
     this.recognition.onerror = () => {
       this.active = false;

@@ -10,9 +10,12 @@ Microphone -> browser audio graph -> local analysis -> interface
 Imported files -> browser file APIs -> local parser/decoder -> local project state
 
 Explicit export -> browser download -> user's device
+
+Optional sign-in -> same-origin API -> account/session records in PostgreSQL
+Logged-in practice summary/goal sync -> same-origin API -> PostgreSQL
 ```
 
-There is no required OpenVox application API in this path.
+The audio path does not require the OpenVox API. Guest mode remains fully local. The API is used only when a user creates an account or signs in to synchronize practice summaries and goals.
 
 ## Data stored locally
 
@@ -31,13 +34,19 @@ Storage is scoped to the site's browser origin.
 
 ## Data leaving the device
 
+### Optional account sync
+
+After explicit registration or sign-in, OpenVox synchronizes training-session summaries and practice goals. A summary can include the exercise name, category, duration, timestamps, accuracy, hit rate, cents statistics, score, target note and user-entered session notes. Raw microphone frames, recording blobs, imported audio, scores and projects are not part of this first synchronization phase.
+
+Passwords are stored as salted scrypt hashes. Browser sessions use an HttpOnly, SameSite=Lax cookie. Deployments outside localhost must use HTTPS and enable secure cookies.
+
 ### Static hosting
 
 The browser downloads application assets from the hosting origin, such as GitHub Pages.
 
-### Optional analytics
+### Analytics
 
-The standard web deployment loads the configured Google Analytics property (`G-6LN7QL6SP2`) by default for page-visit measurement and exposes an opt-out in Settings. The application does not intentionally attach microphone frames, score documents or recording blobs to analytics events. Deployment operators remain responsible for any consent or disclosure requirements that apply to their audience.
+The standard web deployment does not load Google Analytics or another tracking service. Microphone frames, score documents, project data and recording blobs are not sent through a telemetry integration.
 
 ### Optional speech recognition
 
@@ -45,17 +54,19 @@ Browser speech recognition is opt-in and is not guaranteed to be local because t
 
 ### User-initiated links
 
-Opening GitHub, the AuthorChe site or the support page navigates to an external site under the user's control.
+Opening a source or other external link navigates to a separate site under the user's control.
 
 ## Threat boundaries
 
-Because OpenVox is client-side, users should consider:
+Users and deployment operators should consider:
 
 - any script served by the deployment origin can access application-origin browser storage;
 - browser extensions may have broad page permissions;
 - exported project/audio files inherit the security of the device location where they are saved;
 - shared computers should not be assumed private after local data is stored.
+- the self-hosted PostgreSQL operator can access synchronized account and practice data;
+- deleting browser site data does not delete synchronized server records.
 
 ## Self-hosting
 
-The code can be self-hosted. Deployers who require a stricter privacy profile can remove optional analytics entirely while retaining core functionality.
+The static client can still be hosted without the optional API, in which case account features are unavailable and guest mode continues to work. Deployers are responsible for database backups, HTTPS, access control, retention and a process for account-data deletion.

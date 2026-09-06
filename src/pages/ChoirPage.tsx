@@ -326,7 +326,7 @@ export function ChoirPage() {
       <Seo title={t('choir.title')} description={t('choir.subtitle')} path="/choir" />
       <div className="page-header">
         <div className="page-title-wrap">
-          <div className="eyebrow">OpenVox Ensemble</div>
+          <div className="eyebrow">{t('choir.eyebrow')}</div>
           <h1>{t('choir.title')}</h1>
           <p>{t('choir.subtitle')}</p>
         </div>

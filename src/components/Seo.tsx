@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { trackPageView } from '../core/analytics';
 
 export function Seo({ title, description, path = '/' }: { title: string; description: string; path?: string }) {
   useEffect(() => {
@@ -19,7 +18,6 @@ export function Seo({ title, description, path = '/' }: { title: string; descrip
     const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (canonical) canonical.href = url;
     setMeta('meta[property="og:url"]', url);
-    trackPageView(normalizedPath, `${title} | OpenVox Studio`);
   }, [title, description, path]);
   return null;
 }

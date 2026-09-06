@@ -35,7 +35,7 @@ function noteEvent(midi: number) {
 
 export function InstrumentsPage() {
   const { settings, project } = useApp();
-  const { language } = useI18n();
+  const { t, language } = useI18n();
   const x = (key: string) => proText(language, key);
   const audio = useAudioEngine(settings.referenceA4, settings.processingMode, settings.gateMultiplier);
   const player = useRef(new TonePlayer());
@@ -164,8 +164,8 @@ export function InstrumentsPage() {
   return (
     <div className="page">
       <Seo
-        title="Instrument Workshop"
-        description="Chromatic and instrument tuning, alternate tunings, reference tones and MIDI monitoring in OpenVox Studio."
+        title={x('instrument.title')}
+        description={x('instrument.body')}
         path="/instruments"
       />
       <div className="page-header">
@@ -288,7 +288,7 @@ export function InstrumentsPage() {
         <section className="card panel span-6">
           <div className="card-title">
             <h2>{x('instrument.custom')}</h2>
-            <span className="badge">Local</span>
+            <span className="badge">{t('common.local')}</span>
           </div>
           <div className="field">
             <label>{x('instrument.name')}</label>

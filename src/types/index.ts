@@ -1,4 +1,4 @@
-export type Language = 'en' | 'uk' | 'de';
+export type Language = 'en' | 'uk' | 'de' | 'zh';
 export type ThemeMode = 'system' | 'dark' | 'light';
 export type ScoreClef = 'auto' | 'treble' | 'bass';
 export type ScoreArticulation = 'staccato' | 'tenuto' | 'accent' | 'marcato';
@@ -93,6 +93,7 @@ export interface TrainingSessionEntry {
   score?: number;
   targetNote?: string;
   notes?: string;
+  updatedAt?: number;
 }
 
 export interface PracticeGoal {
@@ -102,6 +103,14 @@ export interface PracticeGoal {
   targetMinutesPerWeek: number;
   createdAt: number;
   active: boolean;
+  updatedAt?: number;
+}
+
+export interface SyncDeletion {
+  key: string;
+  entityType: 'trainingSession' | 'practiceGoal';
+  entityId: string;
+  deletedAt: number;
 }
 
 export interface InstrumentString {
@@ -160,7 +169,6 @@ export interface AppSettings {
   processingMode: ProcessingMode;
   gateMultiplier: number;
   microphoneId: string;
-  analyticsEnabled: boolean;
   audio: AudioPreferences;
   accessibility: AccessibilityPreferences;
 }

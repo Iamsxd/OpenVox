@@ -12,35 +12,41 @@ Object.defineProperty(window, 'matchMedia', {
     removeListener: vi.fn(),
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn()
-  }))
+    dispatchEvent: vi.fn(),
+  })),
 });
 
 Object.defineProperty(window, 'scrollTo', { writable: true, value: vi.fn() });
 Object.defineProperty(window, 'open', { writable: true, value: vi.fn() });
-Object.defineProperty(URL, 'createObjectURL', { writable: true, value: vi.fn(() => 'blob:openvox-test') });
-Object.defineProperty(URL, 'revokeObjectURL', { writable: true, value: vi.fn() });
+Object.defineProperty(URL, 'createObjectURL', {
+  writable: true,
+  value: vi.fn(() => 'blob:openvox-test'),
+});
+Object.defineProperty(URL, 'revokeObjectURL', {
+  writable: true,
+  value: vi.fn(),
+});
 
 Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
   configurable: true,
-  value: vi.fn(() => null)
+  value: vi.fn(() => null),
 });
 
 Object.defineProperty(HTMLMediaElement.prototype, 'play', {
   configurable: true,
-  value: vi.fn(async () => undefined)
+  value: vi.fn(async () => undefined),
 });
 Object.defineProperty(HTMLMediaElement.prototype, 'pause', {
   configurable: true,
-  value: vi.fn()
+  value: vi.fn(),
 });
 
 if (!globalThis.crypto?.randomUUID) {
   Object.defineProperty(globalThis, 'crypto', {
     configurable: true,
     value: {
-      randomUUID: () => `00000000-0000-4000-8000-${Math.random().toString(16).slice(2, 14).padEnd(12, '0')}`
-    }
+      randomUUID: () => `00000000-0000-4000-8000-${Math.random().toString(16).slice(2, 14).padEnd(12, '0')}`,
+    },
   });
 }
 
@@ -56,5 +62,4 @@ afterEach(async () => {
     request.onerror = () => resolve();
     request.onblocked = () => resolve();
   });
-  document.head.querySelectorAll('script[data-openvox-analytics]').forEach((node) => node.remove());
 });

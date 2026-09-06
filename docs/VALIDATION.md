@@ -80,4 +80,4 @@ A green automated pipeline means deterministic software checks passed. It does n
 
 ## Current beta validation baseline
 
-For `1.0.0-alpha.1`, the validation surface adds regression coverage for system-language detection, the static Google Analytics bootstrap and treble-staff pitch placement. Exact aggregate test counts and build results should always be confirmed by the CI run attached to the commit being released.
+For `1.0.0-alpha.1`, the validation surface includes regression coverage for system-language detection, the absence of analytics code in production output and treble-staff pitch placement. Exact aggregate test counts and build results should always be confirmed by the CI run attached to the commit being released.

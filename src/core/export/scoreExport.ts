@@ -3,7 +3,6 @@ import type { MusicalNoteEvent, ScoreDocument } from '../../types';
 import { resolveNoteSpelling, synchronizeNotePitch } from '../music/notes';
 import { buildNotationTimeline, resolveScoreClef, scoreMeasureCount, scoreTiming } from '../music/scoreModel';
 import { renderScoreSvg } from '../music/scoreRenderer';
-import { notifySupportOpportunity } from '../support';
 
 export function downloadBlob(blob: Blob, fileName: string): void {
   const url = URL.createObjectURL(blob);
@@ -13,14 +12,20 @@ export function downloadBlob(blob: Blob, fileName: string): void {
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();
-  notifySupportOpportunity();
   setTimeout(() => URL.revokeObjectURL(url), 1500);
 }
 
 function escapeXml(value: string): string {
   return value.replace(
     /[<>&"']/g,
-    (char) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' })[char] || char
+    (char) =>
+      ({
+        '<': '&lt;',
+        '>': '&gt;',
+        '&': '&amp;',
+        '"': '&quot;',
+        "'": '&apos;',
+      })[char] || char,
   );
 }
 
@@ -39,10 +44,10 @@ function durationNotation(value: number): { type: string; dots: number } {
     { value: 0.1875, type: '32nd', dots: 1 },
     { value: 0.125, type: '32nd', dots: 0 },
     { value: 0.09375, type: '64th', dots: 1 },
-    { value: 0.0625, type: '64th', dots: 0 }
+    { value: 0.0625, type: '64th', dots: 0 },
   ];
   return options.reduce((best, candidate) =>
-    Math.abs(candidate.value - value) < Math.abs(best.value - value) ? candidate : best
+    Math.abs(candidate.value - value) < Math.abs(best.value - value) ? candidate : best,
   );
 }
 
@@ -55,7 +60,7 @@ function noteXml(
   tieStop: boolean,
   measureRest = false,
   tupletStart = false,
-  tupletStop = false
+  tupletStop = false,
 ): string {
   const notation = measureRest ? { type: 'whole', dots: 0 } : durationNotation(durationQuarters);
   const dots = '<dot/>'.repeat(notation.dots);
@@ -121,7 +126,11 @@ export function scoreToMusicXml(score: ScoreDocument): string {
   });
   tupletGroups.forEach((group, id) => {
     const ordered = [...group].sort((a, b) => a.start - b.start || a.midi - b.midi);
-    if (ordered.length) tupletBounds.set(id, { first: ordered[0].id, last: ordered[ordered.length - 1].id });
+    if (ordered.length)
+      tupletBounds.set(id, {
+        first: ordered[0].id,
+        last: ordered[ordered.length - 1].id,
+      });
   });
 
   const measures = Array.from({ length: measureCount }, (_, measureIndex) => {
@@ -148,13 +157,13 @@ export function scoreToMusicXml(score: ScoreDocument): string {
       for (const [startTick, group] of [...groups.entries()].sort((a, b) => a[0] - b[0])) {
         if (startTick > cursor) content.push(`<forward><duration>${startTick - cursor}</duration></forward>`);
         const ordered = [...group].sort(
-          (a, b) => Number(Boolean(a.isRest)) - Number(Boolean(b.isRest)) || a.midi - b.midi
+          (a, b) => Number(Boolean(a.isRest)) - Number(Boolean(b.isRest)) || a.midi - b.midi,
         );
         const groupDynamic = ordered.find((event) => !event.isRest && event.dynamic)?.dynamic;
         const lastDynamic = lastDynamicByVoice.get(voice);
         if (groupDynamic && groupDynamic !== lastDynamic) {
           content.push(
-            `<direction placement="below"><direction-type><dynamics><${groupDynamic}/></dynamics></direction-type><voice>${voice}</voice></direction>`
+            `<direction placement="below"><direction-type><dynamics><${groupDynamic}/></dynamics></direction-type><voice>${voice}</voice></direction>`,
           );
           lastDynamicByVoice.set(voice, groupDynamic);
         }
@@ -173,8 +182,8 @@ export function scoreToMusicXml(score: ScoreDocument): string {
               Boolean(event.tieStop),
               Boolean(event.measureRest),
               Boolean(event.tupletGroupId && tupletBounds.get(event.tupletGroupId)?.first === event.id),
-              Boolean(event.tupletGroupId && tupletBounds.get(event.tupletGroupId)?.last === event.id)
-            )
+              Boolean(event.tupletGroupId && tupletBounds.get(event.tupletGroupId)?.last === event.id),
+            ),
           );
           groupDuration = Math.max(groupDuration, durationTicks);
         });
@@ -193,8 +202,10 @@ export function scoreToMusicXml(score: ScoreDocument): string {
 
 export function exportMusicXml(score: ScoreDocument): void {
   downloadBlob(
-    new Blob([scoreToMusicXml(score)], { type: 'application/vnd.recordare.musicxml+xml' }),
-    `${safeName(score.title)}.musicxml`
+    new Blob([scoreToMusicXml(score)], {
+      type: 'application/vnd.recordare.musicxml+xml',
+    }),
+    `${safeName(score.title)}.musicxml`,
   );
 }
 
@@ -202,7 +213,11 @@ export function exportMidi(score: ScoreDocument): void {
   const midi = new Midi();
   midi.name = score.title;
   midi.header.setTempo(score.tempo);
-  midi.header.timeSignatures.push({ ticks: 0, timeSignature: score.timeSignature, measures: 0 });
+  midi.header.timeSignatures.push({
+    ticks: 0,
+    timeSignature: score.timeSignature,
+    measures: 0,
+  });
   const track = midi.addTrack();
   track.name = score.title;
   [...score.notes]
@@ -216,7 +231,7 @@ export function exportMidi(score: ScoreDocument): void {
         mp: 0.68,
         mf: 0.82,
         f: 1,
-        ff: 1.16
+        ff: 1.16,
       };
       const articulationScale = note.articulation === 'marcato' ? 1.24 : note.articulation === 'accent' ? 1.14 : 1;
       const durationScale = note.articulation === 'staccato' ? 0.52 : note.articulation === 'tenuto' ? 0.98 : 1;
@@ -225,7 +240,7 @@ export function exportMidi(score: ScoreDocument): void {
         midi: note.midi,
         time: note.start,
         duration: Math.max(0.01, note.duration * durationScale),
-        velocity: Math.max(0.05, Math.min(1, (note.velocity / 127) * dynamic * articulationScale))
+        velocity: Math.max(0.05, Math.min(1, (note.velocity / 127) * dynamic * articulationScale)),
       });
     });
   const bytes = midi.toArray();
@@ -254,7 +269,7 @@ export async function exportPng(score: ScoreDocument): Promise<void> {
   context.drawImage(image, 0, 0, canvas.width, canvas.height);
   URL.revokeObjectURL(url);
   const png = await new Promise<Blob>((resolve, reject) =>
-    canvas.toBlob((result) => (result ? resolve(result) : reject(new Error('PNG export failed.'))), 'image/png', 1)
+    canvas.toBlob((result) => (result ? resolve(result) : reject(new Error('PNG export failed.'))), 'image/png', 1),
   );
   downloadBlob(png, `${safeName(score.title)}.png`);
 }
@@ -263,7 +278,7 @@ export function printScore(score: ScoreDocument): void {
   const win = window.open('', '_blank', 'noopener,noreferrer');
   if (!win) throw new Error('Popup blocked.');
   win.document.write(
-    `<!doctype html><html><head><title>${escapeXml(score.title)}</title><style>html,body{margin:0;background:white}svg{width:100%;height:auto}@page{size:A4;margin:12mm}</style></head><body>${renderScoreSvg(score, 1200)}<script>window.onload=()=>window.print()</script></body></html>`
+    `<!doctype html><html><head><title>${escapeXml(score.title)}</title><style>html,body{margin:0;background:white}svg{width:100%;height:auto}@page{size:A4;margin:12mm}</style></head><body>${renderScoreSvg(score, 1200)}<script>window.onload=()=>window.print()</script></body></html>`,
   );
   win.document.close();
 }
