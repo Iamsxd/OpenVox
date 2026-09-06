@@ -20,11 +20,11 @@
     "properties": [
       {
         "name": "openvox:package-lock-sha256",
-        "value": "eebff9964727c2a737e1676e75db02af0f5f9084c1e39d258f280e6db6d5594d"
+        "value": "de06081008d4802fb72adb1b8ad201a562cd096ec7840aecb9b93f7b32f21441"
       },
       {
         "name": "openvox:component-count",
-        "value": "317"
+        "value": "311"
       }
     ]
   },
@@ -1071,20 +1071,6 @@
       "name": "@jridgewell/resolve-uri",
       "version": "3.1.2",
       "purl": "pkg:npm/%40jridgewell/resolve-uri@3.1.2",
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "bom-ref": "pkg:npm/%40jridgewell/source-map@0.3.11",
-      "name": "@jridgewell/source-map",
-      "version": "0.3.11",
-      "purl": "pkg:npm/%40jridgewell/source-map@0.3.11",
       "licenses": [
         {
           "license": {
@@ -2215,20 +2201,6 @@
     },
     {
       "type": "library",
-      "bom-ref": "pkg:npm/buffer-from@1.1.2",
-      "name": "buffer-from",
-      "version": "1.1.2",
-      "purl": "pkg:npm/buffer-from@1.1.2",
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
-      "type": "library",
       "bom-ref": "pkg:npm/callsites@3.1.0",
       "name": "callsites",
       "version": "3.1.0",
@@ -2313,20 +2285,6 @@
     },
     {
       "type": "library",
-      "bom-ref": "pkg:npm/commander@2.20.3",
-      "name": "commander",
-      "version": "2.20.3",
-      "purl": "pkg:npm/commander@2.20.3",
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
-      "type": "library",
       "bom-ref": "pkg:npm/concat-map@0.0.1",
       "name": "concat-map",
       "version": "0.0.1",
@@ -2362,7 +2320,7 @@
       "licenses": [
         {
           "license": {
-            "name": "NOASSERTION"
+            "id": "MIT"
           }
         }
       ]
@@ -3727,10 +3685,10 @@
     },
     {
       "type": "library",
-      "bom-ref": "pkg:npm/react-router-dom@7.18.1",
+      "bom-ref": "pkg:npm/react-router-dom@7.18.3",
       "name": "react-router-dom",
-      "version": "7.18.1",
-      "purl": "pkg:npm/react-router-dom@7.18.1",
+      "version": "7.18.3",
+      "purl": "pkg:npm/react-router-dom@7.18.3",
       "licenses": [
         {
           "license": {
@@ -3741,14 +3699,14 @@
     },
     {
       "type": "library",
-      "bom-ref": "pkg:npm/react-router@7.18.1",
+      "bom-ref": "pkg:npm/react-router@7.18.3",
       "name": "react-router",
-      "version": "7.18.1",
-      "purl": "pkg:npm/react-router@7.18.1",
+      "version": "7.18.3",
+      "purl": "pkg:npm/react-router@7.18.3",
       "licenses": [
         {
           "license": {
-            "name": "NOASSERTION"
+            "id": "MIT"
           }
         }
       ]
@@ -3937,34 +3895,6 @@
     },
     {
       "type": "library",
-      "bom-ref": "pkg:npm/source-map-support@0.5.21",
-      "name": "source-map-support",
-      "version": "0.5.21",
-      "purl": "pkg:npm/source-map-support@0.5.21",
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "bom-ref": "pkg:npm/source-map@0.6.1",
-      "name": "source-map",
-      "version": "0.6.1",
-      "purl": "pkg:npm/source-map@0.6.1",
-      "licenses": [
-        {
-          "license": {
-            "name": "NOASSERTION"
-          }
-        }
-      ]
-    },
-    {
-      "type": "library",
       "bom-ref": "pkg:npm/stackback@0.0.2",
       "name": "stackback",
       "version": "0.0.2",
@@ -4029,20 +3959,6 @@
         {
           "license": {
             "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "bom-ref": "pkg:npm/terser@5.49.0",
-      "name": "terser",
-      "version": "5.49.0",
-      "purl": "pkg:npm/terser@5.49.0",
-      "licenses": [
-        {
-          "license": {
-            "id": "BSD-2-Clause"
           }
         }
       ]
