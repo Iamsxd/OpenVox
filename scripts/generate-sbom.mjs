@@ -1,5 +1,4 @@
 import { readFile, writeFile } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join, resolve } from 'node:path';
 
@@ -32,16 +31,6 @@ for (const [packagePath, metadata] of Object.entries(lock.packages ?? {})) {
   const name = metadata.name ?? packagePath.split('node_modules/').at(-1);
   if (!name) continue;
 
-  let installedMetadata = {};
-  const packageJsonPath = join(root, packagePath, 'package.json');
-  if (existsSync(packageJsonPath)) {
-    try {
-      installedMetadata = JSON.parse(await readFile(packageJsonPath, 'utf8'));
-    } catch {
-      installedMetadata = {};
-    }
-  }
-
   const version = metadata.version;
   const purl = `pkg:npm/${encodePackageName(name)}@${encodeURIComponent(version)}`;
   const component = {
@@ -50,12 +39,12 @@ for (const [packagePath, metadata] of Object.entries(lock.packages ?? {})) {
     name,
     version,
     purl,
-    licenses: normalizeLicense(installedMetadata.license ?? metadata.license)
+    licenses: normalizeLicense(metadata.license)
   };
 
-  const homepage = installedMetadata.homepage;
+  const homepage = metadata.homepage;
   const repository =
-    typeof installedMetadata.repository === 'string' ? installedMetadata.repository : installedMetadata.repository?.url;
+    typeof metadata.repository === 'string' ? metadata.repository : metadata.repository?.url;
   const externalReferences = [];
   if (homepage) externalReferences.push({ type: 'website', url: homepage });
   if (repository) {
